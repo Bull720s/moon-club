@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Moon Club</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;--bg2:#0d0d0e;--card:#141416;--card2:#1b1b1e;
+  --bone:#f2ede4;--bone2:#cfc9bc;--mu:#8b8880;--gold:#c9a96b;--gold2:#e6cc94;
+  --line:rgba(242,237,228,.1);--line2:rgba(242,237,228,.2);
+  --ok:#9dbfa6;--bad:#d58a80;
+  --sans:"Montserrat","Helvetica Neue",Arial,sans-serif;--serif:"Cormorant Garamond",Georgia,serif;
+  --out:cubic-bezier(.23,1,.32,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--bone);font-family:var(--sans);-webkit-text-size-adjust:100%}
+body{min-height:100dvh;font-size:15px;line-height:1.45;overscroll-behavior:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+input,select{font:inherit;color:var(--bone)}
+h1,h2,h3,p{margin:0}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;position:relative;padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+.admin .app,.app.wide{max-width:980px}
+.top{position:relative;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:calc(18px + env(safe-area-inset-top)) 22px 6px}
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.phases{display:flex;gap:3px;align-items:center}
+.phases i{display:block;width:11px;height:11px}
+.brand b{font-weight:500;letter-spacing:.42em;font-size:12px;padding-left:2px}
+.coins{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line2);border-radius:99px;font-weight:600;font-size:14px;background:rgba(255,255,255,.03)}
+.coins svg{width:15px;height:15px;color:var(--gold2)}
+.sec{padding:0 22px}
+.eyebrow{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--mu);font-weight:500}
+.serif{font-family:var(--serif);font-style:italic;font-weight:500}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px}
+.row{display:flex;align-items:center;gap:12px}
+.sp{justify-content:space-between}
+.mu{color:var(--mu)}
+.gold{color:var(--gold2)}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border-radius:99px;background:var(--bone);color:#0a0a0a;font-weight:600;font-size:14px;letter-spacing:.06em;transition:transform .16s var(--out),opacity .2s}
+.btn:active{transform:scale(.97)}
+.btn.gold{background:linear-gradient(135deg,#e9d3a0,#c9a96b);box-shadow:0 8px 30px rgba(201,169,107,.25)}
+.btn.ghost{background:transparent;color:var(--bone);border:1px solid var(--line2)}
+.btn.sm{height:38px;padding:0 16px;font-size:12px}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;border:1px solid var(--line2);font-size:11px;letter-spacing:.08em;color:var(--bone2)}
+.pill.ok{color:var(--ok);border-color:rgba(157,191,166,.35)}
+.pill.warn{color:var(--gold2);border-color:rgba(201,169,107,.4)}
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,#050505 60%,transparent);z-index:20}
+.nav>div{display:flex;gap:4px;width:100%;max-width:452px;padding:6px;border:1px solid var(--line);border-radius:99px;background:rgba(20,20,22,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.nav button{flex:1;height:48px;border-radius:99px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--mu);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;transition:background .25s,color .25s}
+.nav button svg{width:19px;height:19px}
+.nav button.on{background:var(--bone);color:#0a0a0a}
+/* hero */
+.hero{position:relative;text-align:center;padding:6px 22px 0}
+.stage-name{margin-top:2px}
+.stage-name h1{font-family:var(--serif);font-style:italic;font-weight:500;font-size:34px;letter-spacing:.01em}
+.luna{width:min(78vw,300px);margin:6px auto 0;display:block;overflow:visible}
+.float{animation:float 5.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.blink{animation:blink 5s infinite;transform-origin:center;transform-box:fill-box}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96.5%{transform:scaleY(.08)}}
+.halo{animation:halo 4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes halo{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+.orbit{animation:spin 24s linear infinite;transform-origin:150px 150px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tw{animation:tw 3s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+.bump{animation:bump .7s var(--out)}
+@keyframes bump{0%{transform:scale(1)}30%{transform:scale(1.09) translateY(-8px)}100%{transform:scale(1)}}
+.plus{position:absolute;left:50%;top:38%;font-weight:700;font-size:34px;color:var(--gold2);pointer-events:none;animation:plus 1.5s var(--out) forwards;text-shadow:0 4px 30px rgba(201,169,107,.6)}
+@keyframes plus{0%{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-90px)}}
+.sparks{position:absolute;inset:0;pointer-events:none}
+.sparks i{position:absolute;left:50%;top:44%;width:6px;height:6px;border-radius:50%;background:var(--gold2);opacity:0;animation:spark 1.2s var(--out) forwards}
+@keyframes spark{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.2)}}
+/* progress */
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#9c8147,#e6cc94);transition:width .9s var(--out)}
+.week{display:flex;gap:8px}
+.week span{flex:1;height:44px;border-radius:14px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:11px;letter-spacing:.1em}
+.week span.on{background:var(--bone);color:#0a0a0a;border-color:var(--bone)}
+.week span svg{width:18px;height:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat b{display:block;font-size:30px;font-weight:300;letter-spacing:-.01em}
+.stat span{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu)}
+.missions{display:flex;flex-direction:column;gap:10px}
+.mission{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;border:1px solid var(--line);background:var(--card)}
+.mission .ic{width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;flex:none}
+.mission .ic svg{width:19px;height:19px}
+.mission.done .ic{background:var(--gold);border-color:var(--gold);color:#0a0a0a}
+.mission small{display:block;color:var(--mu);font-size:12px}
+.mission .rw{margin-left:auto;font-weight:600;font-size:13px;color:var(--gold2);white-space:nowrap}
+/* rewards */
+.rwd{display:flex;gap:14px;align-items:center;padding:16px;border-radius:20px;border:1px solid var(--line);background:var(--card);margin-bottom:10px}
+.rwd .ic{width:54px;height:54px;border-radius:16px;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;color:var(--gold2)}
+.rwd .ic svg{width:24px;height:24px}
+.rwd h3{font-size:15px;font-weight:600}
+.rwd p{font-size:12.5px;color:var(--mu)}
+.rwd .go{margin-left:auto;text-align:right;flex:none}
+.rwd .go b{display:block;font-size:15px;margin-bottom:6px;color:var(--gold2)}
+.ledger li{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;list-style:none}
+.ledger{margin:0;padding:0}
+.ledger li:last-child{border:0}
+.pos{color:var(--gold2);font-weight:600}.neg{color:var(--mu);font-weight:600}
+/* modal */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:40;display:flex;align-items:flex-end;justify-content:center;animation:fade .25s}
+@keyframes fade{from{opacity:0}}
+.sheet{width:100%;max-width:480px;background:var(--bg2);border:1px solid var(--line2);border-bottom:0;border-radius:28px 28px 0 0;padding:26px 24px calc(28px + env(safe-area-inset-bottom));animation:up .4s var(--out);max-height:92dvh;overflow:auto}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sheet h2{font-family:var(--serif);font-style:italic;font-weight:500;font-size:30px;margin-bottom:6px}
+.codebox{display:flex;gap:10px;justify-content:center;margin:22px 0}
+.codebox input{width:100%;max-width:230px;height:66px;text-align:center;font-size:32px;letter-spacing:.5em;padding-left:.5em;background:var(--card);border:1px solid var(--line2);border-radius:18px;outline:none}
+.codebox input:focus{border-color:var(--gold)}
+.err{color:var(--bad);font-size:13px;text-align:center;min-height:20px}
+video{width:100%;border-radius:20px;background:#000;aspect-ratio:1;object-fit:cover}
+.big-code{font-size:40px;letter-spacing:.3em;text-align:center;font-weight:300;margin:14px 0 4px;padding-left:.3em}
+/* forms */
+.field{display:block;margin-bottom:14px}
+.field span{display:block;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--mu);margin-bottom:7px}
+.field input,.field select{width:100%;height:52px;padding:0 16px;background:var(--card);border:1px solid var(--line2);border-radius:16px;outline:none}
+.field input:focus{border-color:var(--gold)}
+.plans{display:grid;gap:8px}
+.plans label{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border:1px solid var(--line2);border-radius:16px;cursor:pointer}
+.plans input{display:none}
+.plans label:has(input:checked){background:var(--bone);color:#0a0a0a;border-color:var(--bone)}
+.plans small{opacity:.65}
+/* welcome */
+.welcome{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:30px 26px;text-align:center}
+.welcome .big{font-family:var(--serif);font-style:italic;font-size:44px;line-height:1.05;margin:18px 0 10px}
+.welcome .phases i{width:22px;height:22px}
+.welcome .phases{justify-content:center;gap:6px}
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--bone);color:#0a0a0a;padding:12px 20px;border-radius:99px;font-weight:600;font-size:13px;z-index:60;animation:up .4s var(--out);white-space:nowrap}
+/* admin */
+.atabs{display:flex;gap:6px;padding:8px 22px 0;overflow:auto}
+.atabs button{padding:10px 18px;border-radius:99px;border:1px solid var(--line2);color:var(--bone2);font-size:12px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.atabs button.on{background:var(--bone);color:#0a0a0a;border-color:var(--bone)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu);font-weight:500;padding:10px 8px;border-bottom:1px solid var(--line2)}
+td{padding:13px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td input{width:90px;height:36px;padding:0 10px;background:var(--card2);border:1px solid var(--line2);border-radius:10px;outline:none}
+.scroll{overflow:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.qrwrap{background:#fff;padding:14px;border-radius:20px;width:max-content;margin:14px auto}
+.qrwrap svg,.qrwrap img{display:block;width:210px;height:210px}
+.space{height:18px}.space2{height:28px}
+.logo{display:block;height:30px;width:auto}
+.logo.big{height:auto;width:min(62vw,250px);margin:0 auto}
+.photo{position:relative;overflow:hidden}
+.photo>img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;opacity:.55;filter:grayscale(.35) contrast(1.05)}
+.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,5,5,.55) 0%,rgba(5,5,5,.25) 38%,rgba(5,5,5,.88) 82%,#050505 100%)}
+.photo>*:not(img.bg){position:relative;z-index:2}
+.chips{display:flex;gap:8px;overflow:auto;padding:2px 22px 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:9px 16px;border-radius:99px;border:1px solid var(--line2);font-size:12px;letter-spacing:.08em;color:var(--bone2)}
+.chip.on{background:var(--bone);color:#0a0a0a;border-color:var(--bone);font-weight:600}
+.search{display:block;margin:0 22px 12px}
+.search input{width:100%;height:50px;padding:0 18px;border-radius:99px;background:var(--card);border:1px solid var(--line2);outline:none;font-size:14px}
+.search input:focus{border-color:var(--gold)}
+.exrow{display:flex;gap:14px;align-items:center;padding:10px;border-radius:20px;border:1px solid var(--line);background:var(--card);margin:0 22px 10px;text-align:left;width:calc(100% - 44px)}
+.exrow .th{width:68px;height:68px;border-radius:14px;background:#e8e4da;overflow:hidden;flex:none}
+.exrow .th img{width:100%;height:100%;object-fit:cover}
+.exrow h3{font-size:14.5px;font-weight:600;line-height:1.25}
+.exrow p{font-size:12px;color:var(--mu);margin-top:3px}
+.exrow .add{margin-left:auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+.exhero{position:relative;border-radius:22px;overflow:hidden;background:#e8e4da;aspect-ratio:1/.78}
+.exhero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:xf 1.8s steps(1) infinite}
+.exhero img:nth-child(2){animation-delay:.9s;opacity:0;animation-name:xf2}
+@keyframes xf{0%{opacity:1}50%{opacity:0}}
+@keyframes xf2{0%{opacity:0}50%{opacity:1}}
+.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);color:var(--gold2);font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.tag{display:inline-block;padding:5px 12px;border-radius:99px;background:rgba(201,169,107,.12);color:var(--gold2);font-size:11.5px;letter-spacing:.06em;margin:0 6px 6px 0}
+.routine{padding:18px;border-radius:22px;border:1px solid var(--line);background:var(--card);margin-bottom:12px}
+.routine h3{font-family:var(--serif);font-style:italic;font-weight:500;font-size:26px}
+.thumbs{display:flex;margin:12px 0 14px}
+.thumbs span{width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid var(--card);margin-left:-8px;background:#e8e4da}
+.thumbs span:first-child{margin-left:0}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.work{position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;padding-bottom:140px;animation:fade .25s}
+.work .bar2{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:calc(14px + env(safe-area-inset-top)) 22px 14px;background:rgba(5,5,5,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.clock{font-size:26px;font-weight:300;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.wex{margin:14px 22px 0;padding:16px;border-radius:22px;border:1px solid var(--line);background:var(--card)}
+.wex .hd{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.wex .hd .th{width:52px;height:52px;border-radius:14px;overflow:hidden;background:#e8e4da;flex:none}
+.wex .hd img{width:100%;height:100%;object-fit:cover}
+.srow{display:grid;grid-template-columns:30px 1fr 1fr 44px;gap:8px;align-items:center;margin-bottom:8px}
+.srow.h{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu)}
+.srow input{width:100%;height:44px;border-radius:12px;background:var(--card2);border:1px solid var(--line);text-align:center;outline:none;font-size:15px}
+.srow input:focus{border-color:var(--gold)}
+.srow .ok{height:44px;border-radius:12px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center}
+.srow .ok svg{width:18px;height:18px;opacity:.35}
+.srow.done input{background:rgba(201,169,107,.14);border-color:rgba(201,169,107,.4)}
+.srow.done .ok{background:var(--gold);border-color:var(--gold);color:#0a0a0a}
+.srow.done .ok svg{opacity:1}
+.rest{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:var(--bone);color:#0a0a0a;border-radius:99px;padding:14px 22px;display:flex;align-items:center;gap:16px;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,.6);animation:up .35s var(--out)}
+.rest b{font-size:20px;font-variant-numeric:tabular-nums;font-weight:600}
+.rest button{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#555}
+.minicard{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:18px;border:1px solid var(--line);background:var(--card);margin-bottom:10px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script src="exercises.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* ============ Moon Club — PWA demo (datos en este dispositivo) ============ */
+const $=(s,r=document)=>r.querySelector(s);
+const KEY='moonclub.v1';
+const STAGES=[
+ {n:'Luna nueva',min:0,say:'Duerme. Tu primera visita la despierta.'},
+ {n:'Creciente',min:6,say:'Ya abrió los ojos.'},
+ {n:'Cuarto',min:20,say:'Mitad luz, mitad constancia.'},
+ {n:'Gibosa',min:45,say:'Casi completa. Se nota tu disciplina.'},
+ {n:'Luna llena',min:90,say:'Forma final. Brillas.'}
+];
+const PLANS=[{id:'mensual',n:'Mensual',p:'$850 / mes'},{id:'estandar',n:'Anual Estándar',p:'$9,500'},{id:'plus',n:'Anual Plus',p:'$10,000'}];
+const ICONS={
+ spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5c.7 5.4 3.6 8.3 9 9-5.4.7-8.3 3.6-9 9-.7-5.4-3.6-8.3-9-9 5.4-.7 8.3-3.6 9-9z"/></svg>',
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16"/></svg>',
+ gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M12 9v11M3.5 13h17M12 9c-1-4-5-4.5-5-2s3 2 5 2zm0 0c1-4 5-4.5 5-2s-3 2-5 2z"/></svg>',
+ flame:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 2.5 1.5 2.5C10 9 11 6 12 3z"/></svg>',
+ user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c.8-4 3.7-6 7.5-6s6.7 2 7.5 6"/></svg>',
+ check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+ cup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 15a3 3 0 0 1-3 2.8h-2A3 3 0 0 1 8 18L7 3zM7.4 8h9.2"/></svg>',
+ people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.2"/><path d="M3 19c.6-3.3 3-5 6-5s5.4 1.7 6 5M16 5.5a3 3 0 0 1 0 6M18 14.3c1.6.6 2.7 2 3 4.7"/></svg>',
+ bottle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5h4v3l1.5 2.5v12a1.8 1.8 0 0 1-1.8 1.8h-3.4A1.8 1.8 0 0 1 8.5 20V8L10 5.5v-3zM8.5 12h7"/></svg>',
+ shirt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3.5L3 6.5l2 4 2.5-1V20.5h9V9.5l2.5 1 2-4-5.5-3c-.6 1.6-1.8 2.4-3.5 2.4S9.1 5.1 8.5 3.5z"/></svg>',
+ tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8a1 1 0 0 1 0 1.4l-7.1 7.1a1 1 0 0 1-1.4 0l-8.5-7.5zM8 8h.01"/></svg>',
+ reformer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15h18M5 15v3M19 15v3M7 15l3-6h7M15 9l-2.5 6"/></svg>',
+ dumb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',
+ book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5v-13zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5v-13z"/></svg>',
+ plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
+};
+const icon=n=>ICONS[n]||ICONS.gift;
+const phaseRow=(on=5)=>{const f='#f2ede4',d=.28;
+ const s=(a,b)=>`<svg viewBox="0 0 12 12" style="width:100%;height:100%">${a}</svg>`;
+ const items=[
+  '<path d="M6 1.2A4.8 4.8 0 0 1 6 10.8A2.6 4.8 0 0 0 6 1.2z" fill="'+f+'"/>',
+  '<path d="M6 1.2a4.8 4.8 0 0 1 0 9.6z" fill="'+f+'"/>',
+  '<circle cx="6" cy="6" r="4.8" fill="'+f+'"/>',
+  '<path d="M6 1.2a4.8 4.8 0 0 0 0 9.6z" fill="'+f+'"/>',
+  '<path d="M6 1.2A4.8 4.8 0 0 0 6 10.8A2.6 4.8 0 0 1 6 1.2z" fill="'+f+'"/>'];
+ return `<span class="phases">${items.map((x,i)=>`<i style="opacity:${i<on?1:d}">${s(x)}</i>`).join('')}</span>`};
+
+/* ---------- estado ---------- */
+const todayStr=(d=new Date())=>{const z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`};
+const fromStr=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const weekStart=d=>{const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);x.setHours(0,0,0,0);return x};
+const wkey=d=>todayStr(weekStart(d));
+function seed(){
+  const names=['Ana Sofía R.','Mariana G.','Carlos M.','Daniela P.','Luis Fernando H.','Valeria S.','Diego A.','Regina T.','Emilio C.','Paula V.','Javier L.','Camila O.'];
+  const members=names.map((n,i)=>{
+    const visits=[];const intensity=[.9,.8,.7,.6,.85,.5,.4,.75,.3,.65,.2,.55][i];
+    for(let d=0;d<70;d++){const dt=new Date();dt.setDate(dt.getDate()-d-(i%3===0?0:1));
+      if(Math.random()<intensity*(((dt.getDay()+6)%7)<5?0.62:0.22))visits.push(todayStr(dt));}
+    const v=[...new Set(visits)].sort();
+    return {id:'m'+i,name:n,phone:'449'+String(1000000+i*73211).slice(0,7),plan:['mensual','mensual','plus','estandar'][i%4],since:v[0]||todayStr(),visits:v,ledger:[],redeemed:0};
+  });
+  members.forEach(m=>{m.ledger=rebuildLedger(m.visits,10,3);});
+  return {v:1,members,me:null,
+    rewards:[
+     {id:'r1',name:'Batido de proteína',desc:'Un batido en recepción.',cost:200,icon:'cup',active:true},
+     {id:'r2',name:'Pase para un invitado',desc:'Un día completo de acceso para quien tú elijas.',cost:350,icon:'people',active:true},
+     {id:'r3',name:'Clase de Pilates Reformer',desc:'Una sesión, sujeta a lugar.',cost:500,icon:'reformer',active:true},
+     {id:'r4',name:'Botella Moon',desc:'La botella negra con las fases de la luna.',cost:650,icon:'bottle',active:true},
+     {id:'r5',name:'Playera Moon',desc:'Merch oficial del club.',cost:1200,icon:'shirt',active:true},
+     {id:'r6',name:'Descuento en tu renovación',desc:'$100 de descuento en tu siguiente mensualidad.',cost:1500,icon:'tag',active:true}],
+    redemptions:[],
+    settings:{pin:'2026',perVisit:10,weeklyGoal:3,weeklyBonus:20,streakBonus:{4:50,8:120,12:200},salt:Math.random().toString(36).slice(2,8)}};
+}
+function rebuildLedger(visits,per,goal){
+  const l=[];const byWeek={};
+  [...visits].sort().forEach(v=>{l.push({ts:v,amt:per,why:'Visita al club'});
+    const k=wkey(fromStr(v));byWeek[k]=(byWeek[k]||0)+1;
+    if(byWeek[k]===goal)l.push({ts:v,amt:20,why:'Semana completa'});});
+  return l;
+}
+let S=load();
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.v===1)return r}catch(e){}const s=seed();localStorage.setItem(KEY,JSON.stringify(s));return s}
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+const me=()=>S.members.find(m=>m.id===S.me);
+const bal=m=>m.ledger.reduce((a,b)=>a+b.amt,0);
+const stageOf=m=>{let s=0;STAGES.forEach((x,i)=>{if(m.visits.length>=x.min)s=i});return s};
+const dailyCode=(d=todayStr())=>{let h=7;const s=d+S.settings.salt;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return String(1000+(h%9000))};
+const weekVisits=(m,d=new Date())=>m.visits.filter(v=>wkey(fromStr(v))===wkey(d));
+function streakWeeks(m){ // semanas consecutivas con meta cumplida (la actual cuenta si ya se cumplió; si no, no rompe)
+  const goal=S.settings.weeklyGoal;const cnt={};m.visits.forEach(v=>{const k=wkey(fromStr(v));cnt[k]=(cnt[k]||0)+1});
+  let d=weekStart(new Date());let n=0;
+  if((cnt[wkey(d)]||0)>=goal)n++;
+  d.setDate(d.getDate()-7);
+  while((cnt[wkey(d)]||0)>=goal){n++;d.setDate(d.getDate()-7)}
+  return n;
+}
+function checkIn(m,code){
+  const t=todayStr();
+  if(code!==dailyCode())return {ok:false,msg:'Código incorrecto. Pídelo en recepción.'};
+  if(m.visits.includes(t))return {ok:false,msg:'Ya registraste tu visita de hoy.'};
+  m.visits.push(t);m.visits.sort();
+  const st=S.settings;let gain=st.perVisit;m.ledger.push({ts:t,amt:st.perVisit,why:'Visita al club'});
+  const extra=[];
+  if(weekVisits(m).length===st.weeklyGoal){m.ledger.push({ts:t,amt:st.weeklyBonus,why:'Semana completa'});gain+=st.weeklyBonus;extra.push('Semana completa');
+    const sw=streakWeeks(m);const b=st.streakBonus[sw];
+    if(b){m.ledger.push({ts:t,amt:b,why:`Racha de ${sw} semanas`});gain+=b;extra.push(`Racha de ${sw} semanas`)}}
+  save();return {ok:true,gain,extra};
+}
+function redeem(m,r){
+  if(bal(m)<r.cost)return null;
+  const code='MN-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  m.ledger.push({ts:todayStr(),amt:-r.cost,why:'Canje: '+r.name});
+  const red={id:'x'+Date.now(),mid:m.id,rid:r.id,name:r.name,cost:r.cost,code,ts:new Date().toISOString(),status:'pendiente'};
+  S.redemptions.unshift(red);save();return red;
+}
+
+/* ---------- Luna (mascota) ---------- */
+function luna(stage,{happy=false}={}){
+  const lit=stage>0;const g=stage/4;
+  const body=lit?'url(#lb)':'#16161a';
+  const glow=[0,.18,.32,.5,.8][stage];
+  const eyes=lit?`<g class="blink"><ellipse cx="122" cy="148" rx="6.5" ry="9" fill="#17171a"/><ellipse cx="178" cy="148" rx="6.5" ry="9" fill="#17171a"/><circle cx="124" cy="144" r="2.4" fill="#fff"/><circle cx="180" cy="144" r="2.4" fill="#fff"/></g>`
+    :`<path d="M112 150q10 8 20 0M168 150q10 8 20 0" stroke="#f2ede4" stroke-width="2.6" stroke-linecap="round" fill="none"/>`;
+  const mouth=happy?`<path d="M136 170q14 20 28 0z" fill="#17171a"/><path d="M142 178q8 7 16 0" fill="#c9605a"/>`
+    :lit?`<path d="M138 172q12 ${6+stage*2.5} 24 0" stroke="#17171a" stroke-width="2.8" stroke-linecap="round" fill="none"/>`
+    :`<path d="M142 176h16" stroke="#f2ede4" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>`;
+  const cheeks=stage>=2?`<ellipse cx="108" cy="168" rx="9" ry="5.5" fill="#d9a48c" opacity=".55"/><ellipse cx="192" cy="168" rx="9" ry="5.5" fill="#d9a48c" opacity=".55"/>`:'';
+  const craters=lit?`<circle cx="104" cy="112" r="9" fill="#000" opacity=".06"/><circle cx="196" cy="122" r="12" fill="#000" opacity=".06"/><circle cx="190" cy="196" r="7" fill="#000" opacity=".06"/><circle cx="120" cy="206" r="10" fill="#000" opacity=".05"/>`:'';
+  const ring=stage>=3?`<g class="orbit" opacity="${stage==3?.6:1}"><ellipse cx="150" cy="150" rx="132" ry="46" fill="none" stroke="url(#gd)" stroke-width="1.6" transform="rotate(-18 150 150)"/><circle cx="268" cy="118" r="5" fill="#e6cc94"/></g>`:'';
+  const stars=stage>=2?`<g class="tw" style="animation-delay:.2s"><path d="M36 70l2.2 6 6 2.2-6 2.2L36 86l-2.2-5.6-6-2.2 6-2.2z" fill="#e6cc94"/></g><g class="tw" style="animation-delay:1.1s"><path d="M262 62l1.8 5 5 1.8-5 1.8-1.8 5-1.8-5-5-1.8 5-1.8z" fill="#f2ede4"/></g><g class="tw" style="animation-delay:1.9s"><path d="M250 244l1.6 4.4 4.4 1.6-4.4 1.6-1.6 4.4-1.6-4.4-4.4-1.6 4.4-1.6z" fill="#e6cc94"/></g>`:'';
+  const crown=stage===4?`<g transform="translate(150 66)"><path d="M-26 6l7-16 9 11 10-17 10 17 9-11 7 16z" fill="url(#gd)" stroke="#8a6d33" stroke-width="1"/></g>`:'';
+  return `<svg class="luna" viewBox="0 0 300 300" aria-label="Luna, tu mascota">
+  <defs>
+   <radialGradient id="lb" cx="38%" cy="32%" r="80%"><stop offset="0" stop-color="#fffdf7"/><stop offset=".6" stop-color="#ebe5d8"/><stop offset="1" stop-color="#c9c2b2"/></radialGradient>
+   <radialGradient id="la" cx="50%" cy="50%" r="50%"><stop offset=".55" stop-color="#e6cc94" stop-opacity=".55"/><stop offset="1" stop-color="#e6cc94" stop-opacity="0"/></radialGradient>
+   <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1deb0"/><stop offset="1" stop-color="#b3924f"/></linearGradient>
+  </defs>
+  <circle class="halo" cx="150" cy="150" r="146" fill="url(#la)" opacity="${glow}"/>
+  ${stars}
+  <g class="float">
+   ${ring}
+   <circle cx="150" cy="154" r="86" fill="${body}" ${lit?'':'stroke="#f2ede4" stroke-opacity=".55" stroke-width="1.6"'}/>
+   ${lit&&stage<4?'':''}${craters}${eyes}${cheeks}${mouth}${crown}
+   ${lit?'':'<g fill="#f2ede4" opacity=".7"><text x="206" y="104" font-size="20" font-weight="600" font-family="Montserrat">z</text><text x="224" y="86" font-size="26" font-weight="600" font-family="Montserrat">Z</text></g>'}
+  </g></svg>`;
+}
+
+/* ---------- helpers UI ---------- */
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const root=$('#root');
+let tab='home',atab='hoy',adminOK=false,toastT;
+function toast(t){document.querySelectorAll('.toast').forEach(x=>x.remove());const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);clearTimeout(toastT);toastT=setTimeout(()=>e.remove(),2600)}
+function sheet(html,onMount){const bg=document.createElement('div');bg.className='sheet-bg';bg.innerHTML=`<div class="sheet">${html}</div>`;bg.addEventListener('click',e=>{if(e.target===bg)close()});document.body.appendChild(bg);const close=()=>{bg.remove();bg.dispatchEvent(new Event('closed'))};bg.close=close;onMount&&onMount(bg,close);return bg}
+const nf=n=>n.toLocaleString('es-MX');
+const fmtD=s=>fromStr(s.slice(0,10)).toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+
+/* ---------- pantallas socio ---------- */
+function render(){
+  if(location.hash.startsWith('#/admin')){return renderAdmin()}
+  document.body.classList.remove('admin');
+  if(!me())return renderWelcome();
+  const m=me();
+  const views={home:viewHome,train:viewTrain,lib:viewLib,premios:viewPremios,yo:viewYo};
+  if(!views[tab])tab='home';
+  root.innerHTML=`<div class="app">
+   <header class="top"><img class="logo" src="img/logo-full.png" alt="Moon Wellness Club"><div class="coins">${ICONS.spark}<span id="bal">${nf(bal(m))}</span></div></header>
+   <main id="view"></main></div>
+   <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['lib','Ejercicios','book'],['premios','Premios','gift'],['yo','Perfil','user']].map(([k,l,i])=>`<button data-t="${k}" class="${tab===k?'on':''}">${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
+  root.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
+  views[tab](m,$('#view'));
+}
+function nextReward(m){const b=bal(m);const act=S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost);return act.find(r=>r.cost>b)||act[act.length-1]}
+function viewHome(m,v){
+  const st=stageOf(m);const t=todayStr();const done=m.visits.includes(t);
+  const wk=weekVisits(m).length;const goal=S.settings.weeklyGoal;
+  const nxt=nextReward(m);const b=bal(m);
+  const toNext=STAGES[st+1]?STAGES[st+1].min-m.visits.length:0;
+  const days=['L','M','M','J','V','S','D'];
+  const ws=weekStart(new Date());
+  const wkDays=days.map((d,i)=>{const x=new Date(ws);x.setDate(x.getDate()+i);return {d,on:m.visits.includes(todayStr(x)),today:todayStr(x)===t}});
+  v.innerHTML=`<section class="hero photo" id="hero" style="margin-top:-62px;padding-top:70px"><img class="bg" src="img/gym-1.jpg" alt="">
+    <div class="eyebrow">Fase ${st+1} de 5</div>
+    <div class="stage-name"><h1>${STAGES[st].n}</h1></div>
+    <div id="lunawrap" style="position:relative">${luna(st,{happy:false})}</div>
+    <p class="mu" style="font-size:13.5px;margin-top:2px">${STAGES[st].say}</p>
+    ${toNext>0?`<p class="mu" style="font-size:11.5px;letter-spacing:.12em;margin-top:8px">${toNext} ${toNext===1?'VISITA':'VISITAS'} PARA ${STAGES[st+1].n.toUpperCase()}</p>`:`<p class="gold" style="font-size:11.5px;letter-spacing:.2em;margin-top:8px">FORMA FINAL</p>`}
+  </section>
+  <div class="space2"></div>
+  <section class="sec"><button class="btn gold" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
+   <p class="mu" style="text-align:center;font-size:12px;margin-top:10px">${done?'Vuelve mañana por más destellos.':`+${S.settings.perVisit} destellos. El código está en recepción.`}</p></section>
+  <div class="space2"></div>
+  <section class="sec"><div class="card">
+    <div class="row sp"><span class="eyebrow">Esta semana</span><b style="font-weight:500">${Math.min(wk,goal)} de ${goal}</b></div>
+    <div class="space"></div>
+    <div class="week">${wkDays.map(x=>`<span class="${x.on?'on':''}" style="${x.today&&!x.on?'border-color:var(--gold);color:var(--gold2)':''}">${x.on?ICONS.check:x.d}</span>`).join('')}</div>
+    <div class="space"></div>
+    <div class="bar"><i style="width:${Math.min(100,wk/goal*100)}%"></i></div>
+    <p class="mu" style="font-size:12.5px;margin-top:10px">${wk>=goal?'Meta de la semana cumplida.':`${goal-wk} ${goal-wk===1?'visita':'visitas'} más para +${S.settings.weeklyBonus} destellos extra.`}</p>
+  </div></section>
+  <div class="space"></div>
+  <section class="sec"><div class="card" id="goto" style="cursor:pointer">
+    <div class="row sp"><span class="eyebrow">Siguiente premio</span><span class="gold" style="font-size:13px;font-weight:600">${nf(b)} / ${nf(nxt.cost)}</span></div>
+    <div class="row" style="margin:14px 0 12px"><div class="rwd" style="margin:0;padding:0;border:0;background:none;flex:1"><div class="ic">${icon(nxt.icon)}</div><div><h3>${esc(nxt.name)}</h3><p>${b>=nxt.cost?'Ya puedes canjearlo':`Te faltan ${nf(nxt.cost-b)} destellos`}</p></div></div></div>
+    <div class="bar"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></div>
+  </div></section>
+  <div class="space"></div>
+  <section class="sec"><div class="eyebrow" style="margin-bottom:12px">Misiones</div><div class="missions">
+    ${mission('Visita hoy',`+${S.settings.perVisit}`,done,'check')}
+    ${mission(`${goal} visitas esta semana`,`+${S.settings.weeklyBonus}`,wk>=goal,'flame')}
+    ${mission('Racha de 4 semanas',`+${S.settings.streakBonus[4]}`,streakWeeks(m)>=4,'spark',`${Math.min(streakWeeks(m),4)} de 4 semanas`)}
+  </div></section>`;
+  $('#goto').onclick=()=>{tab='premios';render()};
+  $('#ci').onclick=()=>openCheckin(m);
+}
+function mission(t,r,done,ic,sub){return `<div class="mission ${done?'done':''}"><div class="ic">${ICONS[ic]}</div><div><b style="font-weight:500">${t}</b><small>${done?'Completada':(sub||'Pendiente')}</small></div><div class="rw">${r}</div></div>`}
+
+function openCheckin(m){
+  let stream=null,stop=false;
+  const bg=sheet(`<h2>Registrar visita</h2><p class="mu" style="font-size:13.5px">Escanea el QR de recepción o escribe el código de 4 dígitos.</p>
+   <div id="camwrap" style="margin-top:18px" hidden><video id="cam" playsinline muted></video></div>
+   <div class="codebox"><input id="code" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off"></div>
+   <div class="err" id="err"></div>
+   <div class="row" style="gap:10px;margin-top:6px"><button class="btn ghost" id="scan" style="flex:1">Escanear QR</button><button class="btn gold" id="ok" style="flex:1">Confirmar</button></div>`,(bg,close)=>{
+    const done=code=>{stop=true;if(stream)stream.getTracks().forEach(t=>t.stop());const r=checkIn(m,code);
+      if(!r.ok){$('#err',bg).textContent=r.msg;stop=false;return}
+      close();celebrate(r)};
+    $('#ok',bg).onclick=()=>done($('#code',bg).value.trim());
+    $('#code',bg).addEventListener('keydown',e=>{if(e.key==='Enter')done(e.target.value.trim())});
+    $('#scan',bg).onclick=async()=>{
+      if(!('BarcodeDetector' in window)){$('#err',bg).textContent='Tu navegador no escanea QR. Escribe el código de 4 dígitos.';return}
+      try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const vid=$('#cam',bg);vid.srcObject=stream;await vid.play();$('#camwrap',bg).hidden=false;
+        const det=new BarcodeDetector({formats:['qr_code']});
+        const loop=async()=>{if(stop)return;try{const r=await det.detect(vid);const x=r.find(q=>/^MOON:\d{4}$/.test(q.rawValue));if(x){done(x.rawValue.slice(5));return}}catch(e){}requestAnimationFrame(loop)};loop();
+      }catch(e){$('#err',bg).textContent='No pude abrir la cámara. Escribe el código.'}};
+    bg.addEventListener('closed',()=>{stop=true;if(stream)stream.getTracks().forEach(t=>t.stop())});
+    setTimeout(()=>$('#code',bg).focus(),300);
+  });
+}
+function celebrate(r){
+  const m=me();tab='home';render();
+  const w=$('#lunawrap');if(!w)return;
+  w.innerHTML=luna(stageOf(m),{happy:true})+`<div class="plus">+${r.gain}</div><div class="sparks">${Array.from({length:16},(_,i)=>{const a=i/16*Math.PI*2,d=90+Math.random()*80;return `<i style="--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-20}px;animation-delay:${Math.random()*.15}s"></i>`}).join('')}</div>`;
+  w.firstElementChild.classList.add('bump');
+  setTimeout(()=>{const s=$('#lunawrap');if(s)s.innerHTML=luna(stageOf(m))},2400);
+  toast(r.extra.length?r.extra.join(' · '):'Visita registrada');
+  if(navigator.vibrate)navigator.vibrate(30);
+}
+
+/* ---------- Entrenar y ejercicios ---------- */
+const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
+const exImg=(id,i=0)=>`https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/${id}/${i}.jpg`;
+const GROUPS=['Pecho','Espalda','Hombro','Bíceps','Tríceps','Pierna','Glúteo','Core','Cardio'];
+const MUS={abdominals:'Abdomen',abductors:'Abductores',adductors:'Aductores',biceps:'Bíceps',calves:'Gemelos',chest:'Pecho',forearms:'Antebrazos',glutes:'Glúteos',hamstrings:'Femorales',lats:'Dorsales','lower back':'Lumbar','middle back':'Espalda media',neck:'Cuello',quadriceps:'Cuádriceps',shoulders:'Hombros',traps:'Trapecios',triceps:'Tríceps'};
+const kindOf=e=>/Máquina|Prensa|Smith|Polea|Caminadora|Elíptica|Remo$|Paralelas/.test(e.e)?'Máquinas':/Mancuerna|kettlebell/i.test(e.e)?'Mancuernas':/Barra|Jaula/.test(e.e)?'Barra':'Peso corporal';
+const KINDS=['Máquinas','Mancuernas','Barra','Peso corporal'];
+const TEMPLATES=[
+ {id:'t1',name:'Fuerza para empezar',desc:'Cuerpo completo en máquinas, ideal si estás empezando.',items:['Leg_Press','Leverage_Chest_Press','Seated_Cable_Rows','Machine_Shoulder_Military_Press','Leg_Extensions','Plank']},
+ {id:'t2',name:'Empuje',desc:'Pecho, hombro y tríceps.',items:['Barbell_Bench_Press_-_Medium_Grip','Incline_Dumbbell_Press','Cable_Crossover','Dumbbell_Shoulder_Press','Side_Lateral_Raise','Triceps_Pushdown_-_Rope_Attachment']},
+ {id:'t3',name:'Jalón',desc:'Espalda y bíceps.',items:['Wide-Grip_Lat_Pulldown','Seated_Cable_Rows','One-Arm_Dumbbell_Row','Face_Pull','Dumbbell_Bicep_Curl','Hammer_Curls']},
+ {id:'t4',name:'Pierna',desc:'Cuádriceps, femorales y gemelos.',items:['Barbell_Squat','Leg_Press','Romanian_Deadlift','Leg_Extensions','Seated_Leg_Curl','Standing_Calf_Raises']},
+ {id:'t5',name:'Glúteo',desc:'Glúteo y pierna posterior.',items:['Barbell_Hip_Thrust','Dumbbell_Lunges','Lying_Leg_Curls','Barbell_Glute_Bridge','Thigh_Adductor','Cable_Crunch']}
+];
+const dup=o=>JSON.parse(JSON.stringify(o));
+const R=m=>(m.routines=m.routines||[]);
+const LG=m=>(m.log=m.log||[]);
+function lastSet(m,ex){for(const w of [...LG(m)].reverse()){const s=[...w.sets].reverse().find(x=>x.ex===ex&&x.kg>=0&&x.reps>0);if(s)return s}return null}
+function bestKg(m,ex){let b=0;LG(m).forEach(w=>w.sets.forEach(s=>{if(s.ex===ex&&s.kg>b)b=s.kg}));return b}
+const thumb=id=>`<img loading="lazy" src="${exImg(id)}" alt="">`;
+const fmtDur=s=>{const m=Math.floor(s/60),x=s%60;return `${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`};
+
+function viewTrain(m,v){
+  const rs=R(m);const act=S.active&&S.active[m.id];
+  const lastOf=r=>{const w=[...LG(m)].reverse().find(x=>x.rid===r.id);return w?fmtD(w.ts):'Sin hacer'};
+  v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">Entrenar</h1>
+   <p class="mu" style="font-size:13.5px;margin:4px 0 18px">Arma tus rutinas, anota cada serie y mira cómo subes de peso.</p>
+   ${act?`<div class="card" style="border-color:var(--gold);margin-bottom:16px"><div class="eyebrow gold">Entrenamiento en curso</div><h3 style="font-size:18px;font-weight:500;margin:6px 0 12px">${esc(act.name)}</h3><button class="btn gold" style="width:100%" id="cont">Continuar</button></div>`:''}
+   <div class="row sp" style="margin-bottom:12px"><span class="eyebrow">Mis rutinas</span><button class="btn sm ghost" id="nr">${ICONS.plus}Nueva</button></div>
+   ${rs.length?rs.map(r=>`<div class="routine"><h3>${esc(r.name)}</h3><p class="mu" style="font-size:12.5px;margin-top:2px">${r.items.length} ejercicios · ${lastOf(r)}</p>
+     <div class="thumbs">${r.items.slice(0,6).map(i=>`<span>${thumb(i)}</span>`).join('')}</div>
+     <div class="row" style="gap:10px"><button class="btn gold" style="flex:1;height:48px" data-go="${r.id}">Iniciar</button><button class="btn ghost sm" style="height:48px" data-ed="${r.id}">Editar</button></div></div>`).join(''):
+     '<div class="card" style="text-align:center;padding:26px"><p class="mu" style="font-size:14px">Aún no tienes rutinas. Crea una o agrega una de Moon.</p></div>'}
+   <div class="space2"></div><div class="eyebrow" style="margin-bottom:12px">Rutinas Moon</div>
+   ${TEMPLATES.map(t=>`<div class="minicard"><div><b style="font-weight:600">${t.name}</b><div class="mu" style="font-size:12px">${t.desc}</div></div><button class="btn sm ghost" data-tp="${t.id}">Agregar</button></div>`).join('')}
+   <div class="space2"></div><div class="eyebrow" style="margin-bottom:12px">Historial</div>
+   ${LG(m).length?[...LG(m)].reverse().slice(0,6).map(w=>`<div class="minicard"><div><b style="font-weight:600">${esc(w.name)}</b><div class="mu" style="font-size:12px">${fmtD(w.ts)} · ${Math.round(w.dur/60)} min · ${w.sets.length} series</div></div><b class="gold" style="font-size:14px">${nf(Math.round(w.vol))} kg</b></div>`).join(''):'<p class="mu" style="font-size:13.5px">Cuando termines tu primer entrenamiento aparecerá aquí con el volumen total.</p>'}
+  </section>`;
+  $('#nr').onclick=()=>routineEditor(m,null);
+  const c=$('#cont');if(c)c.onclick=()=>showWork(m);
+  v.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>startWork(m,rs.find(r=>r.id===b.dataset.go)));
+  v.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>routineEditor(m,rs.find(r=>r.id===b.dataset.ed)));
+  v.querySelectorAll('[data-tp]').forEach(b=>b.onclick=()=>{const t=TEMPLATES.find(x=>x.id===b.dataset.tp);rs.push({id:'r'+Date.now(),name:t.name,items:[...t.items]});save();toast('Agregada a tus rutinas');render()});
+}
+function pickExercises(onAdd,done){
+  let g='Todos',q='',k='';let added=0;
+  const bg=sheet(`<h2>Agregar ejercicio</h2><div style="margin:0 -24px"><label class="search"><input id="pq" placeholder="Buscar ejercicio o máquina" autocomplete="off"></label>
+   <div class="chips" id="pg"></div><div class="chips" id="pk"></div><div id="pl" style="max-height:46dvh;overflow:auto;padding-top:4px"></div></div><button class="btn" style="width:100%;margin-top:14px" id="pd">Listo</button>`,(bg,close)=>{
+   const draw=()=>{
+    $('#pg',bg).innerHTML=['Todos',...GROUPS].map(x=>`<button class="chip ${g===x?'on':''}" data-g="${x}">${x}</button>`).join('');
+    $('#pk',bg).innerHTML=KINDS.map(x=>`<button class="chip ${k===x?'on':''}" data-k="${x}">${x}</button>`).join('');
+    const L=EX.filter(e=>(g==='Todos'||e.g===g)&&(!k||kindOf(e)===k)&&(!q||(e.n+' '+e.e).toLowerCase().includes(q)));
+    $('#pl',bg).innerHTML=L.map(e=>`<button class="exrow" data-x="${e.id}"><span class="th">${thumb(e.id)}</span><span><h3>${e.n}</h3><p>${e.g} · ${e.e}</p></span><span class="add">+</span></button>`).join('')||'<p class="mu" style="padding:20px">Sin resultados.</p>';
+    bg.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{g=b.dataset.g;draw()});
+    bg.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{k=k===b.dataset.k?'':b.dataset.k;draw()});
+    bg.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{onAdd(b.dataset.x);added++;b.querySelector('.add').textContent='✓';toast('Agregado')});
+   };
+   $('#pq',bg).oninput=e=>{q=e.target.value.toLowerCase().trim();draw()};
+   $('#pd',bg).onclick=close;bg.addEventListener('closed',()=>done&&done(added));draw();});
+}
+function routineEditor(m,r){
+  const items=r?[...r.items]:[];let name=r?r.name:'';
+  const bg=sheet('',(bg,close)=>{
+    const draw=()=>{bg.querySelector('.sheet').innerHTML=`<h2>${r?'Editar rutina':'Nueva rutina'}</h2><div class="space"></div>
+     <label class="field"><span>Nombre</span><input id="rn" value="${esc(name)}" placeholder="Ej. Lunes de pecho"></label>
+     <div class="eyebrow" style="margin-bottom:10px">Ejercicios (${items.length})</div>
+     ${items.map((id,i)=>`<div class="exrow" style="margin:0 0 8px;width:100%"><span class="th">${thumb(id)}</span><span><h3>${EXM[id].n}</h3><p>${EXM[id].e}</p></span><button class="add" data-rm="${i}" style="margin-left:auto">×</button></div>`).join('')}
+     <button class="btn ghost" style="width:100%;margin:6px 0 14px" id="ae">${ICONS.plus}Agregar ejercicio</button><div class="err" id="er"></div>
+     <div class="row" style="gap:10px">${r?'<button class="btn ghost" style="flex:1" id="dl">Borrar</button>':''}<button class="btn gold" style="flex:2" id="sv">Guardar</button></div>`;
+     const nm=()=>{name=$('#rn',bg).value};
+     $('#ae',bg).onclick=()=>{nm();bg.style.display='none';pickExercises(id=>items.push(id),()=>{bg.style.display='';draw()})};
+     bg.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{nm();items.splice(+b.dataset.rm,1);draw()});
+     $('#sv',bg).onclick=()=>{nm();if(!name.trim()||!items.length){$('#er',bg).textContent='Pon nombre y al menos un ejercicio.';return}
+       if(r){r.name=name.trim();r.items=items}else R(m).push({id:'r'+Date.now(),name:name.trim(),items});save();close();render()};
+     const d=$('#dl',bg);if(d)d.onclick=()=>{m.routines=R(m).filter(x=>x!==r);save();close();render()};
+    };draw();});
+}
+function startWork(m,r){
+  S.active=S.active||{};
+  if(S.active[m.id]&&!confirm('Ya tienes un entrenamiento en curso. ¿Empezar uno nuevo?'))return showWork(m);
+  S.active[m.id]={rid:r.id,name:r.name,start:Date.now(),items:r.items.map(id=>{const l=lastSet(m,id);return {ex:id,sets:[0,1,2].map(()=>({kg:l?l.kg:'',reps:l?l.reps:'',done:false}))}})};
+  save();showWork(m);
+}
+let wTick=null,restT=null,restLeft=0;
+function showWork(m){
+  const W=S.active&&S.active[m.id];if(!W)return;
+  document.querySelectorAll('.work').forEach(x=>x.remove());
+  const el=document.createElement('div');el.className='work';document.body.appendChild(el);document.body.style.overflow='hidden';
+  const draw=()=>{
+   const done=W.items.reduce((a,i)=>a+i.sets.filter(s=>s.done).length,0),tot=W.items.reduce((a,i)=>a+i.sets.length,0);
+   el.innerHTML=`<div class="bar2"><button class="pill" id="wc">Minimizar</button><div style="text-align:center"><div class="clock" id="clk">${fmtDur(Math.floor((Date.now()-W.start)/1000))}</div><div class="mu" style="font-size:11px;letter-spacing:.14em">${done} DE ${tot} SERIES</div></div><button class="btn sm gold" id="wf">Terminar</button></div>
+   <div class="sec" style="padding-top:18px"><h1 class="serif" style="font-size:30px">${esc(W.name)}</h1></div>
+   ${W.items.map((it,ii)=>{const e=EXM[it.ex];const b=bestKg(m,it.ex);return `<div class="wex"><div class="hd"><span class="th">${thumb(it.ex)}</span><div style="flex:1"><h3 style="font-size:15px;font-weight:600">${e.n}</h3><p class="mu" style="font-size:12px">${e.e}${b?` · Récord ${b} kg`:''}</p></div><button class="pill" data-info="${it.ex}">Ver</button></div>
+     <div class="srow h"><span>#</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span></span></div>
+     ${it.sets.map((s,si)=>`<div class="srow ${s.done?'done':''}"><span class="mu" style="text-align:center">${si+1}</span><input inputmode="decimal" placeholder="0" value="${s.kg}" data-k="${ii}.${si}"><input inputmode="numeric" placeholder="0" value="${s.reps}" data-r="${ii}.${si}"><button class="ok" data-d="${ii}.${si}">${ICONS.check}</button></div>`).join('')}
+     <div class="row" style="gap:8px;margin-top:6px"><button class="pill" data-as="${ii}">+ Serie</button><button class="pill" data-rx="${ii}">Quitar ejercicio</button></div></div>`}).join('')}
+   <div class="sec" style="margin-top:18px"><button class="btn ghost" style="width:100%" id="wa">${ICONS.plus}Agregar ejercicio</button></div>`;
+   const pos=s=>s.split('.').map(Number);
+   el.querySelectorAll('[data-k]').forEach(i=>i.oninput=()=>{const[a,b]=pos(i.dataset.k);W.items[a].sets[b].kg=i.value;save()});
+   el.querySelectorAll('[data-r]').forEach(i=>i.oninput=()=>{const[a,b]=pos(i.dataset.r);W.items[a].sets[b].reps=i.value;save()});
+   el.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const[a,c]=pos(b.dataset.d);const s=W.items[a].sets[c];s.done=!s.done;save();draw();if(s.done)startRest(90)});
+   el.querySelectorAll('[data-as]').forEach(b=>b.onclick=()=>{const it=W.items[+b.dataset.as];const l=it.sets[it.sets.length-1]||{};it.sets.push({kg:l.kg||'',reps:l.reps||'',done:false});save();draw()});
+   el.querySelectorAll('[data-rx]').forEach(b=>b.onclick=()=>{W.items.splice(+b.dataset.rx,1);save();draw()});
+   el.querySelectorAll('[data-info]').forEach(b=>b.onclick=()=>exDetail(m,b.dataset.info,true));
+   $('#wa',el).onclick=()=>pickExercises(id=>{const l=lastSet(m,id);W.items.push({ex:id,sets:[0,1,2].map(()=>({kg:l?l.kg:'',reps:l?l.reps:'',done:false}))});save()},()=>draw());
+   $('#wc',el).onclick=()=>{closeWork();render()};
+   $('#wf',el).onclick=()=>finishWork(m,W,el);
+  };
+  draw();
+  clearInterval(wTick);wTick=setInterval(()=>{const c=$('#clk');if(c)c.textContent=fmtDur(Math.floor((Date.now()-W.start)/1000))},1000);
+}
+function closeWork(){clearInterval(wTick);document.querySelectorAll('.work').forEach(x=>x.remove());document.body.style.overflow='';stopRest()}
+function startRest(sec){stopRest();restLeft=sec;let r=document.createElement('div');r.className='rest';r.id='rest';document.body.appendChild(r);
+  const t=()=>{r.innerHTML=`<span>Descanso</span><b>${fmtDur(restLeft)}</b><button id="rs1">+15 s</button><button id="rs2">Saltar</button>`;$('#rs1',r).onclick=()=>{restLeft+=15;t()};$('#rs2',r).onclick=stopRest};t();
+  restT=setInterval(()=>{restLeft--;if(restLeft<=0){stopRest();if(navigator.vibrate)navigator.vibrate([200,100,200]);toast('Descanso terminado');return}const b=$('#rest b');if(b)b.textContent=fmtDur(restLeft)},1000)}
+function stopRest(){clearInterval(restT);const r=$('#rest');if(r)r.remove()}
+function finishWork(m,W,el){
+  const sets=[];W.items.forEach(it=>it.sets.forEach(s=>{const kg=parseFloat(String(s.kg).replace(',','.'))||0,reps=parseInt(s.reps)||0;if(s.done&&reps>0)sets.push({ex:it.ex,kg,reps})}));
+  if(!sets.length){if(confirm('No marcaste ninguna serie. ¿Descartar el entrenamiento?')){delete S.active[m.id];save();closeWork();render()}return}
+  const prs=[];sets.forEach(s=>{const b=bestKg(m,s.ex);const inNew=Math.max(...sets.filter(x=>x.ex===s.ex).map(x=>x.kg));if(inNew>b&&b>0&&!prs.includes(s.ex))prs.push(s.ex)});
+  const vol=sets.reduce((a,s)=>a+s.kg*s.reps,0);const dur=Math.floor((Date.now()-W.start)/1000);
+  LG(m).push({id:'w'+Date.now(),rid:W.rid,name:W.name,ts:todayStr(),dur,sets,vol});
+  let gain=0;const t=todayStr();
+  if(!m.ledger.some(l=>l.ts===t&&l.why==='Rutina completada')){m.ledger.push({ts:t,amt:5,why:'Rutina completada'});gain=5}
+  delete S.active[m.id];save();closeWork();render();
+  sheet(`<div style="text-align:center"><div class="eyebrow gold">Entrenamiento terminado</div><h2 style="margin-top:8px">${esc(W.name)}</h2>
+   <div class="grid2" style="margin:20px 0"><div class="card stat"><b>${Math.max(1,Math.round(dur/60))}</b><span>minutos</span></div><div class="card stat"><b>${nf(Math.round(vol))}</b><span>kg movidos</span></div><div class="card stat"><b>${sets.length}</b><span>series</span></div><div class="card stat"><b>${prs.length}</b><span>récords nuevos</span></div></div>
+   ${prs.length?`<p class="gold" style="font-size:13.5px;margin-bottom:12px">Récord en: ${prs.map(i=>EXM[i].n).join(', ')}</p>`:''}
+   <p class="mu" style="font-size:13px;margin-bottom:18px">${gain?`+${gain} destellos por completar tu rutina. Recuerda registrar tu visita con el código de recepción.`:'Ya tenías los destellos de rutina de hoy.'}</p><button class="btn" style="width:100%" id="ok">Listo</button></div>`,(b,c)=>{$('#ok',b).onclick=c});
+}
+function viewLib(m,v){
+  let g='Todos',q='',k='';
+  const draw=()=>{
+   const L=EX.filter(e=>(g==='Todos'||e.g===g)&&(!k||kindOf(e)===k)&&(!q||(e.n+' '+e.e+' '+e.g).toLowerCase().includes(q)));
+   v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">Ejercicios</h1><p class="mu" style="font-size:13.5px;margin:4px 0 16px">${EX.length} ejercicios con foto y técnica. Busca por músculo o por máquina.</p></section>
+    <label class="search"><input id="q" placeholder="Buscar: pecho, prensa, polea, mancuernas..." value="${esc(q)}" autocomplete="off"></label>
+    <div class="chips">${['Todos',...GROUPS].map(x=>`<button class="chip ${g===x?'on':''}" data-g="${x}">${x}</button>`).join('')}</div>
+    <div class="chips">${KINDS.map(x=>`<button class="chip ${k===x?'on':''}" data-k="${x}">${x}</button>`).join('')}</div>
+    ${L.map(e=>`<button class="exrow" data-x="${e.id}"><span class="th">${thumb(e.id)}</span><span><h3>${e.n}</h3><p>${e.g} · ${e.e}</p></span></button>`).join('')||'<p class="mu sec" style="padding-top:20px">Sin resultados.</p>'}`;
+   v.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{g=b.dataset.g;draw()});
+   v.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{k=k===b.dataset.k?'':b.dataset.k;draw()});
+   v.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>exDetail(m,b.dataset.x));
+   const i=$('#q');i.oninput=e=>{q=e.target.value.toLowerCase().trim();const pos=e.target.selectionStart;draw();const n=$('#q');n.focus();n.setSelectionRange(pos,pos)};
+  };draw();
+}
+function exDetail(m,id,inWork){
+  const e=EXM[id];const b=bestKg(m,id);const l=lastSet(m,id);
+  sheet(`<div class="exhero"><img src="${exImg(id,0)}" alt=""><img src="${exImg(id,1)}" alt=""></div>
+   <h2 style="margin-top:16px">${e.n}</h2>
+   <div style="margin:6px 0 4px"><span class="tag">${e.g}</span><span class="tag">${e.e}</span>${e.m.map(x=>`<span class="tag">${MUS[x]||x}</span>`).join('')}</div>
+   ${b?`<div class="grid2" style="margin:12px 0"><div class="card stat"><b>${b}</b><span>kg récord</span></div><div class="card stat"><b>${l?l.kg+' × '+l.reps:'—'}</b><span>última serie</span></div></div>`:''}
+   <div class="eyebrow" style="margin:16px 0 4px">Cómo hacerlo</div><ol class="steps">${e.s.map(s=>`<li>${s}</li>`).join('')}</ol>
+   ${inWork?'':`<button class="btn gold" style="width:100%;margin-top:18px" id="ar">Agregar a una rutina</button>`}`,(bg,close)=>{
+    const a=$('#ar',bg);if(a)a.onclick=()=>{
+      const rs=R(m);close();
+      sheet(`<h2>Agregar a...</h2><div class="space"></div>${rs.map(r=>`<button class="minicard" style="width:100%" data-r="${r.id}"><b style="font-weight:600">${esc(r.name)}</b><span class="mu">${r.items.length} ejercicios</span></button>`).join('')}<button class="btn ghost" style="width:100%;margin-top:6px" id="nr">${ICONS.plus}Nueva rutina con este</button>`,(b2,c2)=>{
+        b2.querySelectorAll('[data-r]').forEach(x=>x.onclick=()=>{const r=rs.find(r=>r.id===x.dataset.r);if(!r.items.includes(id))r.items.push(id);save();c2();toast('Agregado a '+r.name)});
+        $('#nr',b2).onclick=()=>{c2();R(m).push({id:'r'+Date.now(),name:'Mi rutina',items:[id]});save();toast('Rutina creada, edítala en Entrenar')};
+      });
+    };
+  });
+}
+
+function viewPremios(m,v){
+  const b=bal(m);const mine=S.redemptions.filter(x=>x.mid===m.id);
+  v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">Premios</h1>
+   <p class="mu" style="font-size:13.5px;margin:4px 0 18px">Canjéalos en recepción mostrando tu código.</p>
+   ${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).map(r=>`<div class="rwd"><div class="ic">${icon(r.icon)}</div><div><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p></div><div class="go"><b>${nf(r.cost)}</b><button class="btn sm ${b>=r.cost?'gold':'ghost'}" data-r="${r.id}" ${b<r.cost?'disabled':''}>Canjear</button></div></div>`).join('')}
+   ${mine.length?`<div class="space"></div><div class="eyebrow" style="margin-bottom:10px">Mis canjes</div>${mine.map(x=>`<div class="card row sp" style="margin-bottom:10px"><div><b style="font-weight:600">${esc(x.name)}</b><div class="mu" style="font-size:12px">${fmtD(x.ts)} · ${x.code}</div></div><span class="pill ${x.status==='pendiente'?'warn':'ok'}">${x.status}</span></div>`).join('')}`:''}
+  </section>`;
+  v.querySelectorAll('[data-r]').forEach(bn=>bn.onclick=()=>{
+    const r=S.rewards.find(x=>x.id===bn.dataset.r);
+    sheet(`<h2>¿Canjear ${esc(r.name)}?</h2><p class="mu">Se descuentan ${nf(r.cost)} destellos. Te queda ${nf(b-r.cost)}.</p><div class="space2"></div><div class="row" style="gap:10px"><button class="btn ghost" style="flex:1" data-x>Cancelar</button><button class="btn gold" style="flex:1" data-y>Canjear</button></div>`,(bg,close)=>{
+      $('[data-x]',bg).onclick=close;
+      $('[data-y]',bg).onclick=()=>{const red=redeem(m,r);close();if(!red)return;
+        sheet(`<div style="text-align:center"><div class="eyebrow">Muestra este código en recepción</div><div class="big-code gold">${red.code}</div><h2 style="margin-top:8px">${esc(red.name)}</h2><p class="mu" style="font-size:13px">Estado: pendiente de entrega</p><div class="space2"></div><button class="btn" style="width:100%" data-z>Listo</button></div>`,(b2,c2)=>{$('[data-z]',b2).onclick=c2;b2.addEventListener('closed',render)})}});
+  });
+}
+
+function viewRacha(m,v){
+  const sw=streakWeeks(m);const total=m.visits.length;
+  const now=new Date();const days=[];for(let i=34;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);days.push(d)}
+  const first=(days[0].getDay()+6)%7;
+  v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">Tu constancia</h1><div class="space"></div>
+   <div class="grid2"><div class="card stat"><b>${sw}</b><span>${sw===1?'semana':'semanas'} de racha</span></div><div class="card stat"><b>${total}</b><span>visitas totales</span></div></div>
+   <div class="space"></div>
+   <div class="card"><div class="eyebrow" style="margin-bottom:14px">Últimas 5 semanas</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:7px">${['L','M','M','J','V','S','D'].map(x=>`<div class="mu" style="text-align:center;font-size:10px;letter-spacing:.1em">${x}</div>`).join('')}
+    ${Array(first).fill('<i></i>').join('')}${days.map(d=>{const s=todayStr(d);const on=m.visits.includes(s);return `<div style="aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;${on?'background:var(--bone);color:#0a0a0a;font-weight:600':'border:1px solid var(--line);color:var(--mu)'};${s===todayStr()&&!on?'border-color:var(--gold)':''}">${d.getDate()}</div>`}).join('')}</div></div>
+   <div class="space"></div>
+   <div class="card"><div class="eyebrow" style="margin-bottom:6px">Bonos por racha</div>
+    ${Object.entries(S.settings.streakBonus).map(([k,x])=>`<div class="row sp" style="padding:11px 0;border-bottom:1px solid var(--line)"><span>${k} semanas seguidas con ${S.settings.weeklyGoal} visitas</span><b class="pos">+${x}</b></div>`).join('')}</div>
+   <div class="space"></div>
+   <div class="eyebrow" style="margin-bottom:6px">Movimientos</div>
+   <ul class="ledger">${[...m.ledger].reverse().slice(0,14).map(l=>`<li><span>${esc(l.why)}<div class="mu" style="font-size:11.5px">${fmtD(l.ts)}</div></span><span class="${l.amt>0?'pos':'neg'}">${l.amt>0?'+':''}${l.amt}</span></li>`).join('')}</ul>
+  </section>`;
+}
+function viewYo(m,v){
+  const plan=PLANS.find(p=>p.id===m.plan);
+  v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">${esc(m.name.split(' ')[0])}</h1><p class="mu">Socio desde ${fmtD(m.since)}</p><div class="space"></div>
+   <div class="card"><div class="row sp"><span class="eyebrow">Membresía</span><span class="pill ok">Activa</span></div><h3 style="margin-top:12px;font-weight:500;font-size:20px">${plan.n}</h3><p class="mu">${plan.p}</p></div>
+   <div class="space"></div>
+   <div class="card"><div class="row sp"><span class="eyebrow">Teléfono</span><span>${esc(m.phone)}</span></div></div>
+   <div class="space2"></div>
+   <button class="btn ghost" style="width:100%" id="out">Cerrar sesión</button>
+   <p class="mu" style="text-align:center;font-size:12px;margin-top:22px"><a href="#/admin" style="color:var(--mu)">Entrada del club</a></p>
+  </section><div id="rk"></div>`;
+  viewRacha(m,$('#rk'));
+  $('#out').onclick=()=>{S.me=null;save();render()};
+}
+function renderWelcome(){
+  document.body.classList.remove('admin');
+  root.innerHTML=`<div class="app photo"><img class="bg" src="img/gym-1.jpg" alt="" style="opacity:.4"><div class="welcome">
+   <img class="logo big" src="img/logo-full.png" alt="Moon Wellness Club">
+   <div style="margin:6px 0 0">${luna(0)}</div>
+   <div class="big">Cada visita<br>la hace brillar.</div>
+   <p class="mu" style="font-size:14px;max-width:300px;margin:0 auto 26px">Entrena, junta destellos y cámbialos por premios en Moon Wellness Club.</p>
+   <button class="btn gold" id="new">Crear mi cuenta</button><div class="space"></div>
+   <button class="btn ghost" id="demo">Ver como socio de ejemplo</button>
+   <p class="mu" style="font-size:12px;margin-top:22px"><a href="#/admin" style="color:var(--mu)">Entrada del club</a></p>
+  </div></div>`;
+  $('#demo').onclick=()=>{S.me=S.members[0].id;save();render()};
+  $('#new').onclick=()=>sheet(`<h2>Bienvenido a Moon</h2><p class="mu" style="font-size:13.5px;margin-bottom:20px">Para que recepción te reconozca.</p>
+   <label class="field"><span>Nombre</span><input id="n" autocomplete="name"></label>
+   <label class="field"><span>Teléfono</span><input id="p" inputmode="tel" autocomplete="tel"></label>
+   <div class="field"><span>Mi membresía</span><div class="plans">${PLANS.map((p,i)=>`<label><input type="radio" name="pl" value="${p.id}" ${i===0?'checked':''}><b style="font-weight:500">${p.n}</b><small>${p.p}</small></label>`).join('')}</div></div>
+   <div class="err" id="e"></div><button class="btn gold" style="width:100%" id="go">Empezar</button>`,(bg,close)=>{
+    $('#go',bg).onclick=()=>{const n=$('#n',bg).value.trim(),p=$('#p',bg).value.trim();
+      if(n.length<2||p.replace(/\D/g,'').length<10){$('#e',bg).textContent='Escribe tu nombre y un teléfono de 10 dígitos.';return}
+      const m={id:'m'+Date.now(),name:n,phone:p,plan:bg.querySelector('input[name=pl]:checked').value,since:todayStr(),visits:[],ledger:[{ts:todayStr(),amt:20,why:'Bienvenida'}],redeemed:0};
+      S.members.push(m);S.me=m.id;save();close();render()}});
+}
+
+/* ---------- panel del club ---------- */
+function renderAdmin(){
+  document.body.classList.add('admin');
+  if(!adminOK){
+    root.innerHTML=`<div class="app"><div class="welcome"><div>${phaseRow()}</div><div class="big" style="font-size:20px;letter-spacing:.5em;font-style:normal;font-family:var(--sans);margin:12px 0 4px;font-weight:500">MOON</div><p class="eyebrow">Panel del club</p><div class="space2"></div>
+    <div class="codebox"><input id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div><div class="err" id="e"></div>
+    <button class="btn" id="in">Entrar</button><p class="mu" style="font-size:12px;margin-top:20px">Demo: PIN 2026</p><p style="margin-top:14px"><a href="#/" style="color:var(--mu);font-size:12px">Volver a la app</a></p></div></div>`;
+    const go=()=>{if($('#pin').value===S.settings.pin){adminOK=true;renderAdmin()}else $('#e').textContent='PIN incorrecto'};
+    $('#in').onclick=go;$('#pin').addEventListener('keydown',e=>e.key==='Enter'&&go());return;
+  }
+  const T=[['hoy','Hoy'],['socios','Socios'],['canjes','Canjes'],['premios','Premios'],['ajustes','Ajustes']];
+  const pend=S.redemptions.filter(r=>r.status==='pendiente').length;
+  root.innerHTML=`<div class="app wide"><header class="top"><div class="brand">${phaseRow()}<b>MOON · CLUB</b></div><a href="#/" class="pill">Ver app del socio</a></header>
+   <div class="atabs">${T.map(([k,l])=>`<button data-a="${k}" class="${atab===k?'on':''}">${l}${k==='canjes'&&pend?` · ${pend}`:''}</button>`).join('')}</div><div class="space"></div><main class="sec" id="av"></main></div>`;
+  root.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{atab=b.dataset.a;renderAdmin()});
+  ({hoy:aHoy,socios:aSocios,canjes:aCanjes,premios:aPremios,ajustes:aAjustes})[atab]($('#av'));
+}
+function aHoy(v){
+  const t=todayStr();const hoy=S.members.filter(m=>m.visits.includes(t));
+  const sem=S.members.reduce((a,m)=>a+weekVisits(m).length,0);
+  const act=S.members.filter(m=>m.visits.some(x=>(new Date()-fromStr(x))/864e5<=14)).length;
+  const emit=S.members.reduce((a,m)=>a+m.ledger.filter(l=>l.amt>0).reduce((s,l)=>s+l.amt,0),0);
+  const code=dailyCode();
+  v.innerHTML=`<div class="kpis"><div class="card stat"><b>${hoy.length}</b><span>visitas hoy</span></div><div class="card stat"><b>${sem}</b><span>visitas esta semana</span></div><div class="card stat"><b>${act}/${S.members.length}</b><span>activos (14 días)</span></div><div class="card stat"><b>${nf(emit)}</b><span>destellos emitidos</span></div></div>
+  <div class="space"></div>
+  <div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+   <div class="card" style="text-align:center"><div class="eyebrow">Código de hoy</div><div class="big-code gold">${code}</div><p class="mu" style="font-size:12px">Cambia solo cada día a las 12 de la noche. Muéstralo en recepción como QR.</p><div class="qrwrap" id="qr"></div><button class="btn ghost sm" onclick="window.print()">Imprimir QR</button></div>
+   <div class="card"><div class="eyebrow" style="margin-bottom:8px">Entraron hoy</div>${hoy.length?`<ul class="ledger">${hoy.map(m=>`<li><span>${esc(m.name)}</span><span class="mu">${streakWeeks(m)} sem. de racha</span></li>`).join('')}</ul>`:'<p class="mu" style="padding:14px 0">Aún nadie ha registrado su visita hoy.</p>'}</div></div>`;
+  drawQR($('#qr'),'MOON:'+code);
+}
+function drawQR(el,text){
+  const go=()=>{try{const q=qrcode(0,'M');q.addData(text);q.make();el.innerHTML=q.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(e){el.innerHTML='<div style="color:#000;font-size:12px;padding:20px">QR no disponible sin internet. Usa el código.</div>'}};
+  if(window.qrcode)return go();
+  const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';s.onload=go;s.onerror=go;document.head.appendChild(s);
+}
+function aSocios(v){
+  const rows=S.members.map(m=>({m,last:m.visits[m.visits.length-1]||'—',sw:streakWeeks(m),b:bal(m)})).sort((a,b)=>String(b.last).localeCompare(String(a.last)));
+  v.innerHTML=`<div class="row sp" style="margin-bottom:14px"><h2 class="serif" style="font-size:30px">${S.members.length} socios</h2></div>
+  <div class="card scroll"><table><thead><tr><th>Socio</th><th>Plan</th><th>Visitas</th><th>Racha</th><th>Destellos</th><th>Última</th></tr></thead><tbody>
+  ${rows.map(({m,last,sw,b})=>{const gone=last!=='—'&&(new Date()-fromStr(last))/864e5>14;return `<tr><td><b style="font-weight:500">${esc(m.name)}</b><div class="mu" style="font-size:11.5px">${esc(m.phone)}</div></td><td>${PLANS.find(p=>p.id===m.plan).n}</td><td>${m.visits.length}</td><td>${sw} sem.</td><td class="gold">${nf(b)}</td><td>${last==='—'?last:fmtD(last)} ${gone?'<span class="pill warn">Sin venir</span>':''}</td></tr>`}).join('')}
+  </tbody></table></div><p class="mu" style="font-size:12px;margin-top:10px">Los socios que llevan más de 14 días sin venir salen marcados para que recepción les escriba.</p>`;
+}
+function aCanjes(v){
+  const L=S.redemptions;
+  v.innerHTML=`<h2 class="serif" style="font-size:30px;margin-bottom:14px">Canjes</h2>${L.length?`<div class="card scroll"><table><thead><tr><th>Código</th><th>Socio</th><th>Premio</th><th>Fecha</th><th></th></tr></thead><tbody>${L.map(r=>{const m=S.members.find(x=>x.id===r.mid);return `<tr><td><b>${r.code}</b></td><td>${esc(m?m.name:'—')}</td><td>${esc(r.name)}</td><td>${fmtD(r.ts)}</td><td>${r.status==='pendiente'?`<button class="btn sm gold" data-e="${r.id}">Marcar entregado</button>`:'<span class="pill ok">entregado</span>'}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="mu">Todavía no hay canjes.</p>'}`;
+  v.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{S.redemptions.find(r=>r.id===b.dataset.e).status='entregado';save();renderAdmin();toast('Entregado')});
+}
+function aPremios(v){
+  v.innerHTML=`<div class="row sp" style="margin-bottom:14px"><h2 class="serif" style="font-size:30px">Premios</h2><button class="btn sm gold" id="add">Agregar</button></div>
+  <div class="card scroll"><table><thead><tr><th>Premio</th><th>Destellos</th><th>Activo</th></tr></thead><tbody>${S.rewards.map(r=>`<tr><td><b style="font-weight:500">${esc(r.name)}</b><div class="mu" style="font-size:11.5px">${esc(r.desc)}</div></td><td><input type="number" min="10" step="10" value="${r.cost}" data-c="${r.id}"></td><td><button class="pill ${r.active?'ok':''}" data-t="${r.id}">${r.active?'Activo':'Oculto'}</button></td></tr>`).join('')}</tbody></table></div>
+  <p class="mu" style="font-size:12px;margin-top:10px">Referencia: un socio de 3 visitas por semana junta unos 50 destellos a la semana (10 por visita más 20 de bono).</p>`;
+  v.querySelectorAll('[data-c]').forEach(i=>i.onchange=()=>{S.rewards.find(r=>r.id===i.dataset.c).cost=Math.max(10,+i.value||10);save();toast('Guardado')});
+  v.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const r=S.rewards.find(r=>r.id===b.dataset.t);r.active=!r.active;save();renderAdmin()});
+  $('#add').onclick=()=>sheet(`<h2>Nuevo premio</h2><div class="space"></div><label class="field"><span>Nombre</span><input id="rn"></label><label class="field"><span>Descripción</span><input id="rd"></label><label class="field"><span>Destellos</span><input id="rc" type="number" value="300"></label><button class="btn gold" style="width:100%" id="rs">Guardar</button>`,(bg,close)=>{$('#rs',bg).onclick=()=>{const n=$('#rn',bg).value.trim();if(!n)return;S.rewards.push({id:'r'+Date.now(),name:n,desc:$('#rd',bg).value.trim(),cost:Math.max(10,+$('#rc',bg).value||300),icon:'gift',active:true});save();close();renderAdmin()}});
+}
+function aAjustes(v){
+  const s=S.settings;
+  v.innerHTML=`<h2 class="serif" style="font-size:30px;margin-bottom:14px">Ajustes</h2><div class="card">
+   <label class="field"><span>Destellos por visita</span><input id="a1" type="number" value="${s.perVisit}"></label>
+   <label class="field"><span>Meta de visitas por semana</span><input id="a2" type="number" min="1" max="7" value="${s.weeklyGoal}"></label>
+   <label class="field"><span>Bono por semana completa</span><input id="a3" type="number" value="${s.weeklyBonus}"></label>
+   <label class="field"><span>PIN del panel</span><input id="a4" maxlength="4" value="${s.pin}"></label>
+   <button class="btn gold" id="sv">Guardar</button></div>
+   <div class="space"></div><div class="card"><div class="eyebrow">Demo</div><p class="mu" style="font-size:13px;margin:8px 0 14px">Los datos de esta versión viven en este dispositivo. Para varios teléfonos a la vez se conecta una base de datos.</p><button class="btn ghost sm" id="rs">Restablecer datos de ejemplo</button></div>`;
+  $('#sv').onclick=()=>{s.perVisit=Math.max(1,+$('#a1').value||10);s.weeklyGoal=Math.min(7,Math.max(1,+$('#a2').value||3));s.weeklyBonus=Math.max(0,+$('#a3').value||0);const p=$('#a4').value.replace(/\D/g,'');if(p.length===4)s.pin=p;save();toast('Guardado')};
+  $('#rs').onclick=()=>{if(confirm('Se borran todos los datos de esta demo. ¿Seguir?')){localStorage.removeItem(KEY);S=load();adminOK=false;location.hash='#/';render()}};
+}
+window.addEventListener('hashchange',render);
+render();
+if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
