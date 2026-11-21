@@ -8,14 +8,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Moon Club</title>
 <meta name="description" content="Tu constancia en Moon Wellness Club: visitas, rutinas, premios, horario y membresías.">
-<meta property="og:title" content="Moon Club"><meta property="og:description" content="Entrena, junta destellos y cámbialos por premios en Moon Wellness Club."><meta property="og:image" content="img/logo-full.png">
-<link rel="preload" as="image" href="img/logo-full.png">
+<meta property="og:title" content="Moon Club"><meta property="og:description" content="Entrena, junta destellos y cámbialos por premios en Moon Wellness Club."><meta property="og:image" content="https://moon-club.vercel.app/img/logo-full.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --bg:#050505;--bg2:#0d0d0e;--card:#141416;--card2:#1b1b1e;
@@ -42,7 +42,7 @@ h1,h2,h3,p{margin:0}
 .coins{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line2);border-radius:99px;font-weight:600;font-size:14px;background:rgba(255,255,255,.03)}
 .coins svg{width:15px;height:15px;color:var(--gold2)}
 .sec{padding:0 22px}
-.eyebrow{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--mu);font-weight:500}
+.eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--mu);font-weight:500}
 .serif{font-family:var(--serif);font-style:italic;font-weight:500}
 .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px}
 .row{display:flex;align-items:center;gap:12px}
@@ -53,7 +53,7 @@ h1,h2,h3,p{margin:0}
 .btn:active{transform:scale(.97)}
 .btn.gold{background:linear-gradient(135deg,#e9d3a0,#c9a96b);box-shadow:0 8px 30px rgba(201,169,107,.25)}
 .btn.ghost{background:transparent;color:var(--bone);border:1px solid var(--line2)}
-.btn.sm{height:38px;padding:0 16px;font-size:12px}
+.btn.sm{height:44px;padding:0 16px;font-size:12px}
 .btn[disabled]{opacity:.35;pointer-events:none}
 .pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;border:1px solid var(--line2);font-size:11px;letter-spacing:.08em;color:var(--bone2)}
 .pill.ok{color:var(--ok);border-color:rgba(157,191,166,.35)}
@@ -164,7 +164,7 @@ td input{width:90px;height:36px;padding:0 10px;background:var(--card2);border:1p
 .photo>*:not(img.bg){position:relative;z-index:2}
 .chips{display:flex;gap:8px;overflow:auto;padding:2px 22px 12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:9px 16px;border-radius:99px;border:1px solid var(--line2);font-size:12px;letter-spacing:.08em;color:var(--bone2)}
+.chip{flex:none;padding:12px 16px;border-radius:99px;border:1px solid var(--line2);font-size:12px;letter-spacing:.08em;color:var(--bone2)}
 .chip.on{background:var(--bone);color:#0a0a0a;border-color:var(--bone);font-weight:600}
 .search{display:block;margin:0 22px 12px}
 .search input{width:100%;height:50px;padding:0 18px;border-radius:99px;background:var(--card);border:1px solid var(--line2);outline:none;font-size:14px}
@@ -208,27 +208,30 @@ td input{width:90px;height:36px;padding:0 10px;background:var(--card2);border:1p
 .srow.done .ok svg{opacity:1}
 .rest{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:var(--bone);color:#0a0a0a;border-radius:99px;padding:14px 22px;display:flex;align-items:center;gap:16px;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,.6);animation:up .35s var(--out)}
 .rest b{font-size:20px;font-variant-numeric:tabular-nums;font-weight:600}
-.rest button{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#555}
+.rest button{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);min-height:44px;padding:0 6px}
 .minicard{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:18px;border:1px solid var(--line);background:var(--card);margin-bottom:10px}
 /* ---- v3: movimiento, foco y sección Moon ---- */
 :focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:12px}
 input:focus-visible{outline:0}
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.55;
-  background:radial-gradient(1.2px 1.2px at 12% 18%,#f2ede4 50%,transparent 51%),radial-gradient(1px 1px at 82% 12%,#e6cc94 50%,transparent 51%),radial-gradient(1.4px 1.4px at 66% 38%,#f2ede4 50%,transparent 51%),radial-gradient(1px 1px at 28% 56%,#e6cc94 50%,transparent 51%),radial-gradient(1.2px 1.2px at 90% 72%,#f2ede4 50%,transparent 51%),radial-gradient(1px 1px at 8% 86%,#f2ede4 50%,transparent 51%),radial-gradient(1.3px 1.3px at 50% 92%,#e6cc94 50%,transparent 51%);animation:tw 6s ease-in-out infinite}
+  background:radial-gradient(1.2px 1.2px at 12% 18%,#f2ede4 50%,transparent 51%),radial-gradient(1px 1px at 82% 12%,#e6cc94 50%,transparent 51%),radial-gradient(1.4px 1.4px at 66% 38%,#f2ede4 50%,transparent 51%),radial-gradient(1px 1px at 28% 56%,#e6cc94 50%,transparent 51%),radial-gradient(1.2px 1.2px at 90% 72%,#f2ede4 50%,transparent 51%),radial-gradient(1px 1px at 8% 86%,#f2ede4 50%,transparent 51%),radial-gradient(1.3px 1.3px at 50% 92%,#e6cc94 50%,transparent 51%);animation:tw 6s ease-in-out infinite;will-change:opacity}
+@media (max-width:480px){body::before{animation:none}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
-#view>section>*,#view>.chips,#view>.search,#view>.exrow{animation:rise .6s var(--out) both}
-#view>section>*:nth-child(2){animation-delay:.05s}#view>section>*:nth-child(3){animation-delay:.1s}#view>section>*:nth-child(4){animation-delay:.15s}
-#view>section>*:nth-child(5){animation-delay:.2s}#view>section>*:nth-child(6){animation-delay:.25s}#view>section>*:nth-child(n+7){animation-delay:.3s}
-#view>section:nth-of-type(2)>*{animation-delay:.12s}#view>section:nth-of-type(3)>*{animation-delay:.18s}#view>section:nth-of-type(4)>*{animation-delay:.24s}#view>section:nth-of-type(n+5)>*{animation-delay:.3s}
-@keyframes grow{from{width:0}}
-.bar>i{animation:grow 1.1s var(--out) .25s backwards}
+#view.enter>section>*:not(img.bg),#view.enter>.chips,#view.enter>.search,#view.enter>.exrow{animation:rise .45s var(--out) both;animation-delay:calc(var(--s,0)*.1s + var(--i,0)*.05s)}
+#view>section:nth-of-type(2){--s:1}#view>section:nth-of-type(3){--s:2}#view>section:nth-of-type(4){--s:3}#view>section:nth-of-type(n+5){--s:4}
+#view>section>*:nth-child(2){--i:1}#view>section>*:nth-child(3){--i:2}#view>section>*:nth-child(4){--i:3}#view>section>*:nth-child(5){--i:4}#view>section>*:nth-child(n+6){--i:5}
+@keyframes grow{from{transform:scaleX(0)}}
+.bar>i{transform-origin:left;animation:grow 1.1s var(--out) .25s backwards}
 .btn.gold{position:relative;overflow:hidden}
-.btn.gold::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:sheen 5s ease-in-out 1.2s infinite}
-@keyframes sheen{0%,70%{left:-60%}100%{left:130%}}
+.btn.gold::after{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-150%) skewX(-20deg);animation:sheen 5s ease-in-out 1.2s infinite}
+@keyframes sheen{0%,70%{transform:translateX(-150%) skewX(-20deg)}100%{transform:translateX(350%) skewX(-20deg)}}
 .rwd,.exrow,.minicard,.routine,.mission{transition:transform .2s var(--out),border-color .25s,background .25s}
 .rwd:active,.exrow:active,.minicard:active,.mission:active{transform:scale(.985)}
 @media (hover:hover){.rwd:hover,.exrow:hover,.routine:hover,.mission:hover{border-color:var(--line2);background:var(--card2)}.chip:hover,.pill:hover{border-color:var(--gold)}}
-.nav button{min-width:0;font-size:9px;letter-spacing:.08em}
+.nav{padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+.nav>div{gap:2px;padding:4px}
+.nav button{min-width:0;padding:0 1px;overflow:hidden;font-size:10px;letter-spacing:.02em;text-transform:none}
+.nav button span{max-width:100%;white-space:nowrap}
 .nav button svg{transition:transform .35s var(--out)}
 .nav button.on svg{transform:translateY(-1px) scale(1.08)}
 .live{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:99px;border:1px solid rgba(157,191,166,.35);color:var(--ok);font-size:11.5px;letter-spacing:.08em;font-weight:500}
@@ -240,12 +243,16 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .hrow b{font-weight:600}.hrow span{color:var(--bone2);font-variant-numeric:tabular-nums}
 .hrow.today{color:var(--gold2)}.hrow.today span{color:var(--gold2)}
 .pcard{position:relative;padding:20px;border-radius:22px;border:1px solid var(--line);background:var(--card);margin-bottom:12px}
+.pcard.me h3{padding-right:90px}
+.live{background:rgba(5,5,5,.6)}
 .pcard.me{border-color:var(--gold);box-shadow:0 0 0 1px rgba(201,169,107,.25),0 12px 40px rgba(201,169,107,.08)}
 .pcard h3{font-family:var(--serif);font-style:italic;font-weight:500;font-size:26px}
 .pcard .pr{font-size:30px;font-weight:300;margin-top:4px}.pcard .pr small{font-size:12px;color:var(--mu);letter-spacing:.06em}
 .pcard .badge{position:absolute;top:18px;right:18px}
-.cmp{width:100%;border-collapse:collapse;font-size:12.5px}
-.cmp th,.cmp td{padding:12px 6px;text-align:center;border-bottom:1px solid var(--line)}
+.cmp{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.cmp th,.cmp td{padding:10px 3px;text-align:center;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.cmp th{font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mu);font-weight:500}
+.cmp th:first-child{width:34%}
 .cmp th:first-child,.cmp td:first-child{text-align:left;padding-left:0;color:var(--bone2)}
 .cmp td svg{width:16px;height:16px;color:var(--gold2)}
 .cmp td.no{color:var(--mu)}
@@ -253,6 +260,27 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .notice svg{width:22px;height:22px;flex:none;color:var(--gold2);margin-top:2px}
 .notice p{font-size:13px;color:var(--bone2)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.phasehero .phases{animation:float 5.5s ease-in-out infinite}
+.phasehero::before{content:"";position:absolute;left:50%;top:58%;width:78%;height:46%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(230,204,148,.28),transparent);filter:blur(10px);animation:halo 4s ease-in-out infinite;pointer-events:none}
+.phasehero{position:relative}
+.track{padding:16px 18px;border-radius:22px;border:1px solid var(--line);background:var(--card);cursor:pointer;transition:transform .2s var(--out),border-color .25s}
+.track:active{transform:scale(.985)}
+.trk{display:flex;align-items:center;gap:12px}.trk .bar{flex:1;height:12px}
+.chest{flex:none;width:44px;height:44px;border-radius:14px;border:1px solid var(--line2);background:var(--card2);display:flex;align-items:center;justify-content:center;color:var(--gold2)}
+.chest svg{width:22px;height:22px}.chest.ready{background:linear-gradient(135deg,#e9d3a0,#c9a96b);color:#0a0a0a;border-color:transparent;animation:bump 1.6s var(--out) infinite}
+.btn.big{height:64px;font-size:16px;letter-spacing:.08em}
+.btn.pulse{animation:glowp 2.4s ease-in-out infinite}
+@keyframes glowp{0%,100%{box-shadow:0 8px 30px rgba(201,169,107,.25)}50%{box-shadow:0 8px 44px rgba(230,204,148,.55)}}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:18px;border:1px solid var(--line);background:var(--card);text-align:center;transition:transform .2s var(--out)}
+.tile:active{transform:scale(.96)}.tile span{width:36px;height:36px;border-radius:12px;background:var(--card2);display:flex;align-items:center;justify-content:center;color:var(--gold2)}
+.tile span svg{width:20px;height:20px}.tile b{font-size:10.5px;font-weight:500;line-height:1.2;color:var(--bone2)}.tile small{font-size:11px;color:var(--gold2);font-weight:600}
+.tile.open{border-color:rgba(201,169,107,.5)}
+.phasehero{display:flex;justify-content:center;padding:30px 0 16px;width:auto;margin:0}
+.phasehero .phases{gap:clamp(8px,3vw,14px)}
+.phasehero .phases i{width:clamp(34px,11.5vw,54px);height:auto;aspect-ratio:1;transition:opacity .6s var(--out)}
+.phasehero .phases i:not([style*=".28"]){filter:drop-shadow(0 0 14px rgba(230,204,148,.35))}
+.phasehero.happy .phases i:not([style*=".28"]){filter:drop-shadow(0 0 22px rgba(230,204,148,.8))}
 </style>
 <script src="exercises.js"></script>
 </head>
@@ -263,11 +291,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 const $=(s,r=document)=>r.querySelector(s);
 const KEY='moonclub.v1';
 const STAGES=[
- {n:'Luna nueva',min:0,say:'Duerme. Tu primera visita la despierta.'},
- {n:'Creciente',min:6,say:'Ya abrió los ojos.'},
+ {n:'Luna nueva',min:0,say:'Tu primera visita enciende la primera fase.'},
+ {n:'Creciente',min:6,say:'Ya llevas tus primeras visitas. Sigue así.'},
  {n:'Cuarto',min:20,say:'Mitad luz, mitad constancia.'},
  {n:'Gibosa',min:45,say:'Casi completa. Se nota tu disciplina.'},
- {n:'Luna llena',min:90,say:'Forma final. Brillas.'}
+ {n:'Luna llena',min:90,say:'Ciclo completo. Constancia total.'}
 ];
 const PLANS=[{id:'mensual',n:'Mensual',p:'$850 / mes',big:'$850',per:'al mes',eq:''},{id:'estandar',n:'Anual Estándar',p:'$9,500',big:'$9,500',per:'al año',eq:'$792 al mes'},{id:'plus',n:'Anual Plus',p:'$10,000',big:'$10,000',per:'al año',eq:'$833 al mes'}];
 const HORARIO=[{d:'Lun – Vie',days:[1,2,3,4,5],o:300,c:1380},{d:'Sábado',days:[6],o:480,c:1020},{d:'Domingo',days:[0],o:540,c:840}];
@@ -296,7 +324,7 @@ const ICONS={
  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
 const icon=n=>ICONS[n]||ICONS.gift;
-const phaseRow=(on=5)=>{const f='#f2ede4',d=.28;
+const phaseRow=(on=5,vol=false)=>{const f=vol?'url(#pg)':'#f2ede4',d=vol?.22:.28;
  const s=(a,b)=>`<svg viewBox="0 0 12 12" style="width:100%;height:100%">${a}</svg>`;
  const items=[
   '<path d="M6 1.2A4.8 4.8 0 0 1 6 10.8A2.6 4.8 0 0 0 6 1.2z" fill="'+f+'"/>',
@@ -377,33 +405,7 @@ function redeem(m,r){
 
 /* ---------- Luna (mascota) ---------- */
 function luna(stage,{happy=false}={}){
-  const lit=stage>0;const g=stage/4;
-  const body=lit?'url(#lb)':'#16161a';
-  const glow=[0,.18,.32,.5,.8][stage];
-  const eyes=lit?`<g class="blink"><ellipse cx="122" cy="148" rx="6.5" ry="9" fill="#17171a"/><ellipse cx="178" cy="148" rx="6.5" ry="9" fill="#17171a"/><circle cx="124" cy="144" r="2.4" fill="#fff"/><circle cx="180" cy="144" r="2.4" fill="#fff"/></g>`
-    :`<path d="M112 150q10 8 20 0M168 150q10 8 20 0" stroke="#f2ede4" stroke-width="2.6" stroke-linecap="round" fill="none"/>`;
-  const mouth=happy?`<path d="M136 170q14 20 28 0z" fill="#17171a"/><path d="M142 178q8 7 16 0" fill="#c9605a"/>`
-    :lit?`<path d="M138 172q12 ${6+stage*2.5} 24 0" stroke="#17171a" stroke-width="2.8" stroke-linecap="round" fill="none"/>`
-    :`<path d="M142 176h16" stroke="#f2ede4" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>`;
-  const cheeks=stage>=2?`<ellipse cx="108" cy="168" rx="9" ry="5.5" fill="#d9a48c" opacity=".55"/><ellipse cx="192" cy="168" rx="9" ry="5.5" fill="#d9a48c" opacity=".55"/>`:'';
-  const craters=lit?`<circle cx="104" cy="112" r="9" fill="#000" opacity=".06"/><circle cx="196" cy="122" r="12" fill="#000" opacity=".06"/><circle cx="190" cy="196" r="7" fill="#000" opacity=".06"/><circle cx="120" cy="206" r="10" fill="#000" opacity=".05"/>`:'';
-  const ring=stage>=3?`<g class="orbit" opacity="${stage==3?.6:1}"><ellipse cx="150" cy="150" rx="132" ry="46" fill="none" stroke="url(#gd)" stroke-width="1.6" transform="rotate(-18 150 150)"/><circle cx="268" cy="118" r="5" fill="#e6cc94"/></g>`:'';
-  const stars=stage>=2?`<g class="tw" style="animation-delay:.2s"><path d="M36 70l2.2 6 6 2.2-6 2.2L36 86l-2.2-5.6-6-2.2 6-2.2z" fill="#e6cc94"/></g><g class="tw" style="animation-delay:1.1s"><path d="M262 62l1.8 5 5 1.8-5 1.8-1.8 5-1.8-5-5-1.8 5-1.8z" fill="#f2ede4"/></g><g class="tw" style="animation-delay:1.9s"><path d="M250 244l1.6 4.4 4.4 1.6-4.4 1.6-1.6 4.4-1.6-4.4-4.4-1.6 4.4-1.6z" fill="#e6cc94"/></g>`:'';
-  const crown=stage===4?`<g transform="translate(150 66)"><path d="M-26 6l7-16 9 11 10-17 10 17 9-11 7 16z" fill="url(#gd)" stroke="#8a6d33" stroke-width="1"/></g>`:'';
-  return `<svg class="luna" viewBox="0 0 300 300" aria-label="Luna, tu mascota">
-  <defs>
-   <radialGradient id="lb" cx="38%" cy="32%" r="80%"><stop offset="0" stop-color="#fffdf7"/><stop offset=".6" stop-color="#ebe5d8"/><stop offset="1" stop-color="#c9c2b2"/></radialGradient>
-   <radialGradient id="la" cx="50%" cy="50%" r="50%"><stop offset=".55" stop-color="#e6cc94" stop-opacity=".55"/><stop offset="1" stop-color="#e6cc94" stop-opacity="0"/></radialGradient>
-   <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1deb0"/><stop offset="1" stop-color="#b3924f"/></linearGradient>
-  </defs>
-  <circle class="halo" cx="150" cy="150" r="146" fill="url(#la)" opacity="${glow}"/>
-  ${stars}
-  <g class="float">
-   ${ring}
-   <circle cx="150" cy="154" r="86" fill="${body}" ${lit?'':'stroke="#f2ede4" stroke-opacity=".55" stroke-width="1.6"'}/>
-   ${lit&&stage<4?'':''}${craters}${eyes}${cheeks}${mouth}${crown}
-   ${lit?'':'<g fill="#f2ede4" opacity=".7"><text x="206" y="104" font-size="20" font-weight="600" font-family="Montserrat">z</text><text x="224" y="86" font-size="26" font-weight="600" font-family="Montserrat">Z</text></g>'}
-  </g></svg>`;
+  return `<div class="luna phasehero${happy?' happy':''}" role="img" aria-label="Fase ${stage+1} de 5"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="pg" cx="35%" cy="28%" r="85%"><stop offset="0" stop-color="#fffaf0"/><stop offset=".55" stop-color="#e9dfc9"/><stop offset="1" stop-color="#b9a47a"/></radialGradient></defs></svg>${phaseRow(stage+1,true)}</div>`;
 }
 
 /* ---------- helpers UI ---------- */
@@ -428,7 +430,8 @@ function render(){
    <main id="view"></main></div>
    <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['lib','Ejercicios','book'],['moon','Moon','clock'],['premios','Premios','gift'],['yo','Perfil','user']].map(([k,l,i])=>`<button data-t="${k}" class="${tab===k?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
   root.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
-  views[tab](m,$('#view'));
+  const vw=$('#view');vw.classList.toggle('enter',window.__lt!==tab);window.__lt=tab;clearTimeout(window.__et);window.__et=setTimeout(()=>vw.classList.remove('enter'),900);
+  views[tab](m,vw);
 }
 function nextReward(m){const b=bal(m);const act=S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost);return act.find(r=>r.cost>b)||act[act.length-1]}
 function viewHome(m,v){
@@ -446,9 +449,16 @@ function viewHome(m,v){
     <p class="mu" style="font-size:13.5px;margin-top:2px">${STAGES[st].say}</p>
     ${toNext>0?`<p class="mu" style="font-size:11.5px;letter-spacing:.12em;margin-top:8px">${toNext} ${toNext===1?'VISITA':'VISITAS'} PARA ${STAGES[st+1].n.toUpperCase()}</p>`:`<p class="gold" style="font-size:11.5px;letter-spacing:.2em;margin-top:8px">FORMA FINAL</p>`}
   </section>
-  <div class="space2"></div>
-  <section class="sec"><button class="btn gold" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
+  <section class="sec" style="margin-top:14px"><div class="track" id="goto" role="button" tabindex="0" aria-label="Ver premios">
+    <div class="row sp" style="margin-bottom:10px"><span class="eyebrow">Siguiente premio</span><span class="gold" style="font-size:13px;font-weight:600">${nf(b)} / ${nf(nxt.cost)}</span></div>
+    <div class="trk"><div class="bar"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></div><span class="chest ${b>=nxt.cost?'ready':''}">${icon(nxt.icon)}</span></div>
+    <p class="mu" style="font-size:12.5px;margin-top:10px">${esc(nxt.name)} · ${b>=nxt.cost?'Ya puedes canjearlo':`te faltan ${nf(nxt.cost-b)} destellos`}</p>
+  </div></section>
+  <div class="space"></div>
+  <section class="sec"><button class="btn gold big ${done?'':'pulse'}" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
    <p class="mu" style="text-align:center;font-size:12px;margin-top:10px">${done?'Vuelve mañana por más destellos.':`+${S.settings.perVisit} destellos. El código está en recepción.`}</p></section>
+  <div class="space"></div>
+  <section class="sec"><div class="tiles">${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).slice(0,4).map(r=>`<button class="tile ${b>=r.cost?'open':''}" data-pr="1"><span>${icon(r.icon)}</span><b>${esc(r.name.split(' ').slice(0,2).join(' '))}</b><small>${nf(r.cost)}</small></button>`).join('')}</div></section>
   <div class="space2"></div>
   <section class="sec"><div class="card">
     <div class="row sp"><span class="eyebrow">Esta semana</span><b style="font-weight:500">${Math.min(wk,goal)} de ${goal}</b></div>
@@ -458,22 +468,18 @@ function viewHome(m,v){
     <div class="bar"><i style="width:${Math.min(100,wk/goal*100)}%"></i></div>
     <p class="mu" style="font-size:12.5px;margin-top:10px">${wk>=goal?'Meta de la semana cumplida.':`${goal-wk} ${goal-wk===1?'visita':'visitas'} más para +${S.settings.weeklyBonus} destellos extra.`}</p>
   </div></section>
+
   <div class="space"></div>
-  <section class="sec"><div class="card" id="goto" style="cursor:pointer">
-    <div class="row sp"><span class="eyebrow">Siguiente premio</span><span class="gold" style="font-size:13px;font-weight:600">${nf(b)} / ${nf(nxt.cost)}</span></div>
-    <div class="row" style="margin:14px 0 12px"><div class="rwd" style="margin:0;padding:0;border:0;background:none;flex:1"><div class="ic">${icon(nxt.icon)}</div><div><h3>${esc(nxt.name)}</h3><p>${b>=nxt.cost?'Ya puedes canjearlo':`Te faltan ${nf(nxt.cost-b)} destellos`}</p></div></div></div>
-    <div class="bar"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></div>
-  </div></section>
-  <div class="space"></div>
-  <section class="sec"><div class="card" id="gomoon" style="cursor:pointer"><div class="row sp"><span class="eyebrow">Moon hoy</span><span class="live ${openNow().on?'':'off'}">${openNow().txt}</span></div></div></section>
+  <section class="sec"><div class="card" id="gomoon" role="button" tabindex="0" style="cursor:pointer"><div class="row sp"><span class="eyebrow">Moon hoy</span><span class="live ${openNow().on?'':'off'}">${openNow().txt}</span></div></div></section>
   <div class="space"></div>
   <section class="sec"><div class="eyebrow" style="margin-bottom:12px">Misiones</div><div class="missions">
     ${mission('Visita hoy',`+${S.settings.perVisit}`,done,'check')}
     ${mission(`${goal} visitas esta semana`,`+${S.settings.weeklyBonus}`,wk>=goal,'flame')}
     ${mission('Racha de 4 semanas',`+${S.settings.streakBonus[4]}`,streakWeeks(m)>=4,'spark',`${Math.min(streakWeeks(m),4)} de 4 semanas`)}
   </div></section>`;
-  $('#goto').onclick=()=>{tab='premios';render()};
+  const gp=()=>{tab='premios';render();window.scrollTo(0,0)};$('#goto').onclick=gp;$('#goto').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();gp()}};v.querySelectorAll('[data-pr]').forEach(x=>x.onclick=gp);
   $('#gomoon').onclick=()=>{tab='moon';render();window.scrollTo(0,0)};
+  $('#gomoon').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#gomoon').click()}};
   $('#ci').onclick=()=>openCheckin(m);
 }
 function mission(t,r,done,ic,sub){return `<div class="mission ${done?'done':''}"><div class="ic">${ICONS[ic]}</div><div><b style="font-weight:500">${t}</b><small>${done?'Completada':(sub||'Pendiente')}</small></div><div class="rw">${r}</div></div>`}
@@ -485,9 +491,10 @@ function openCheckin(m){
    <div class="codebox"><input id="code" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off"></div>
    <div class="err" id="err"></div>
    <div class="row" style="gap:10px;margin-top:6px"><button class="btn ghost" id="scan" style="flex:1">Escanear QR</button><button class="btn gold" id="ok" style="flex:1">Confirmar</button></div>`,(bg,close)=>{
-    const done=code=>{stop=true;if(stream)stream.getTracks().forEach(t=>t.stop());const r=checkIn(m,code);
-      if(!r.ok){$('#err',bg).textContent=r.msg;stop=false;return}
-      close();celebrate(r)};
+    let bad='';
+    const done=code=>{if(code===bad)return;const r=checkIn(m,code);
+      if(!r.ok){bad=code;$('#err',bg).textContent=r.msg;return}
+      stop=true;if(stream)stream.getTracks().forEach(t=>t.stop());close();celebrate(r)};
     $('#ok',bg).onclick=()=>done($('#code',bg).value.trim());
     $('#code',bg).addEventListener('keydown',e=>{if(e.key==='Enter')done(e.target.value.trim())});
     $('#scan',bg).onclick=async()=>{
@@ -567,7 +574,7 @@ function pickExercises(onAdd,done){
     bg.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{k=k===b.dataset.k?'':b.dataset.k;draw()});
     bg.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{onAdd(b.dataset.x);added++;b.querySelector('.add').textContent='✓';toast('Agregado')});
    };
-   $('#pq',bg).oninput=e=>{q=e.target.value.toLowerCase().trim();draw()};
+   let pt;$('#pq',bg).oninput=e=>{q=e.target.value.toLowerCase().trim();clearTimeout(pt);pt=setTimeout(draw,120)};
    $('#pd',bg).onclick=close;bg.addEventListener('closed',()=>done&&done(added));draw();});
 }
 function routineEditor(m,r){
@@ -652,7 +659,7 @@ function viewLib(m,v){
    v.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{g=b.dataset.g;draw()});
    v.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{k=k===b.dataset.k?'':b.dataset.k;draw()});
    v.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>exDetail(m,b.dataset.x));
-   const i=$('#q');i.oninput=e=>{q=e.target.value.toLowerCase().trim();const pos=e.target.selectionStart;draw();const n=$('#q');n.focus();n.setSelectionRange(pos,pos)};
+   const i=$('#q');let dt;i.oninput=e=>{q=e.target.value.toLowerCase().trim();const pos=e.target.selectionStart;clearTimeout(dt);dt=setTimeout(()=>{draw();const n=$('#q');n.focus();n.setSelectionRange(pos,pos)},120)};
   };draw();
 }
 function exDetail(m,id,inWork){
@@ -676,9 +683,9 @@ function exDetail(m,id,inWork){
 function viewMoon(m,v){
   const o=openNow();const dow=new Date().getDay();
   const Y=ICONS.check,N='<td class="no">—</td>';
-  const rows=[['Acceso completo a instalaciones',Y,Y,Y],['Atención personalizada',Y,Y,Y],['Comunidad, activaciones y eventos','Acceso','Acceso','Preferente'],['Mejor valor anual',null,Y,Y],['Invitados',null,null,'24 al año'],['Aliados Moon','Seleccionados','Seleccionados','Preferente'],['Merch Moon','Acceso','Acceso','Preferente']];
+  const rows=[['Acceso completo a instalaciones',Y,Y,Y],['Atención personalizada',Y,Y,Y],['Comunidad, activaciones y eventos','Acceso','Acceso','Preferente'],['Mejor valor anual',null,Y,Y],['Invitados',null,null,'24 al año'],['Aliados Moon','Selectos','Selectos','Preferente'],['Merch Moon','Acceso','Acceso','Preferente']];
   const cell=x=>x===null?N:`<td>${x}</td>`;
-  v.innerHTML=`<section class="hero photo" style="margin-top:-62px;padding:84px 22px 26px;text-align:left"><img class="bg" src="img/gym-1.jpg" alt="" fetchpriority="high">
+  v.innerHTML=`<section class="hero photo" style="margin-top:calc(-62px - env(safe-area-inset-top));padding:calc(84px + env(safe-area-inset-top)) 22px 26px;text-align:left"><img class="bg" src="img/gym-1.jpg" alt="" fetchpriority="high">
     <div class="eyebrow">Moon Wellness Club</div><h1 class="serif" style="font-size:38px;margin:4px 0 14px">Tu club</h1><span class="live ${o.on?'':'off'}">${o.txt}</span></section>
    <div class="space"></div>
    <section class="sec"><div class="eyebrow" style="margin-bottom:6px">Horario</div><div class="card" style="padding:6px 18px">
@@ -686,7 +693,7 @@ function viewMoon(m,v){
    <div class="space2"></div>
    <section class="sec"><div class="eyebrow" style="margin-bottom:12px">Elige tu experiencia</div>
     ${PLANS.map(p=>`<div class="pcard ${m.plan===p.id?'me':''}">${m.plan===p.id?'<span class="pill warn badge">Tu plan</span>':''}<h3>${p.n}</h3><div class="pr">${p.big} <small>${p.per}${p.eq?' · '+p.eq:''}</small></div></div>`).join('')}
-    <div class="card scroll" style="padding:6px 14px"><table class="cmp"><thead><tr><th>Beneficios</th><th>Mensual</th><th>Anual Est.</th><th>Anual Plus</th></tr></thead><tbody>
+    <div class="card scroll" style="padding:6px 8px"><table class="cmp"><thead><tr><th>Beneficios</th><th>Mensual</th><th>Anual Est.</th><th>Anual Plus</th></tr></thead><tbody>
     ${rows.map(r=>`<tr><td>${r[0]}</td>${cell(r[1])}${cell(r[2])}${cell(r[3])}</tr>`).join('')}</tbody></table></div>
     <p class="mu" style="font-size:12px;margin-top:12px">Precio de inscripción $500. No contamos con daypass. Beneficios sujetos a políticas y disponibilidad.</p></section>
    <div class="space2"></div>
@@ -727,7 +734,7 @@ function viewRacha(m,v){
   </section>`;
 }
 function viewYo(m,v){
-  const plan=PLANS.find(p=>p.id===m.plan);
+  const plan=PLANS.find(p=>p.id===m.plan)||PLANS[0];
   v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">${esc(m.name.split(' ')[0])}</h1><p class="mu">Socio desde ${fmtD(m.since)}</p><div class="space"></div>
    <div class="card"><div class="row sp"><span class="eyebrow">Membresía</span><span class="pill ok">Activa</span></div><h3 style="margin-top:12px;font-weight:500;font-size:20px">${plan.n}</h3><p class="mu">${plan.p}</p></div>
    <div class="space"></div>
@@ -744,7 +751,7 @@ function renderWelcome(){
   root.innerHTML=`<div class="app photo"><img class="bg" src="img/gym-1.jpg" alt="" style="opacity:.4"><div class="welcome">
    <img class="logo big" src="img/logo-full.png" alt="Moon Wellness Club">
    <div style="margin:6px 0 0">${luna(0)}</div>
-   <div class="big">Cada visita<br>la hace brillar.</div>
+   <div class="big">Cada visita<br>suma a tu ciclo.</div>
    <p class="mu" style="font-size:14px;max-width:300px;margin:0 auto 26px">Entrena, junta destellos y cámbialos por premios en Moon Wellness Club.</p>
    <button class="btn gold" id="new">Crear mi cuenta</button><div class="space"></div>
    <button class="btn ghost" id="demo">Ver como socio de ejemplo</button>
@@ -801,7 +808,7 @@ function aSocios(v){
   const rows=S.members.map(m=>({m,last:m.visits[m.visits.length-1]||'—',sw:streakWeeks(m),b:bal(m)})).sort((a,b)=>String(b.last).localeCompare(String(a.last)));
   v.innerHTML=`<div class="row sp" style="margin-bottom:14px"><h2 class="serif" style="font-size:30px">${S.members.length} socios</h2></div>
   <div class="card scroll"><table><thead><tr><th>Socio</th><th>Plan</th><th>Visitas</th><th>Racha</th><th>Destellos</th><th>Última</th></tr></thead><tbody>
-  ${rows.map(({m,last,sw,b})=>{const gone=last!=='—'&&(new Date()-fromStr(last))/864e5>14;return `<tr><td><b style="font-weight:500">${esc(m.name)}</b><div class="mu" style="font-size:11.5px">${esc(m.phone)}</div></td><td>${PLANS.find(p=>p.id===m.plan).n}</td><td>${m.visits.length}</td><td>${sw} sem.</td><td class="gold">${nf(b)}</td><td>${last==='—'?last:fmtD(last)} ${gone?'<span class="pill warn">Sin venir</span>':''}</td></tr>`}).join('')}
+  ${rows.map(({m,last,sw,b})=>{const gone=last!=='—'&&(new Date()-fromStr(last))/864e5>14;return `<tr><td><b style="font-weight:500">${esc(m.name)}</b><div class="mu" style="font-size:11.5px">${esc(m.phone)}</div></td><td>${(PLANS.find(p=>p.id===m.plan)||PLANS[0]).n}</td><td>${m.visits.length}</td><td>${sw} sem.</td><td class="gold">${nf(b)}</td><td>${last==='—'?last:fmtD(last)} ${gone?'<span class="pill warn">Sin venir</span>':''}</td></tr>`}).join('')}
   </tbody></table></div><p class="mu" style="font-size:12px;margin-top:10px">Los socios que llevan más de 14 días sin venir salen marcados para que recepción les escriba.</p>`;
 }
 function aCanjes(v){
