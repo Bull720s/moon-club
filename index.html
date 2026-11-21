@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Jost:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
@@ -24,6 +24,7 @@
   --ok:#9dbfa6;--bad:#d58a80;
   --sans:"Montserrat","Helvetica Neue",Arial,sans-serif;--serif:"Cormorant Garamond",Georgia,serif;
   --out:cubic-bezier(.23,1,.32,1);
+  --logo:"Jost","Montserrat","Helvetica Neue",Arial,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
@@ -297,6 +298,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 @keyframes splashout{0%,70%{opacity:1}100%{opacity:0;visibility:hidden}}
 .flash{position:fixed;inset:0;z-index:70;pointer-events:none;background:radial-gradient(circle at 50% 42%,rgba(230,204,148,.55),transparent 60%);animation:flash 1s var(--out) forwards}
 @keyframes flash{from{opacity:1}to{opacity:0}}
+h1.serif{font-family:var(--logo)!important;font-style:normal!important;font-weight:300!important;text-transform:uppercase;letter-spacing:.18em;font-size:27px!important}
+h1.serif.xl{font-size:34px!important;letter-spacing:.24em}
+.svc{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc div{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:20px;border:1px solid var(--line);text-align:center;font-size:12.5px;line-height:1.3;color:var(--bone2)}
+.svc svg{width:34px;height:34px;color:var(--gold2)}
 .phasehero{display:flex;justify-content:center;padding:30px 0 16px;width:auto;margin:0}
 .phasehero .phases{gap:clamp(8px,3vw,14px)}
 .phasehero .phases i{width:clamp(38px,13vw,62px);height:auto;aspect-ratio:1;transition:opacity .6s var(--out)}
@@ -765,10 +771,12 @@ function viewMoon(m,v){
   const rows=[['Acceso completo a instalaciones',Y,Y,Y],['Atención personalizada',Y,Y,Y],['Comunidad, activaciones y eventos','Acceso','Acceso','Preferente'],['Mejor valor anual',null,Y,Y],['Invitados',null,null,'24 al año'],['Aliados Moon','Selectos','Selectos','Preferente'],['Merch Moon','Acceso','Acceso','Preferente']];
   const cell=x=>x===null?N:`<td>${x}</td>`;
   v.innerHTML=`<section class="hero photo" style="margin-top:calc(-62px - env(safe-area-inset-top));padding:calc(84px + env(safe-area-inset-top)) 22px 26px;text-align:left"><img class="bg" src="img/gym-1.jpg" alt="" fetchpriority="high">
-    <div class="eyebrow">Moon Wellness Club</div><h1 class="serif" style="font-size:38px;margin:4px 0 14px">Tu club</h1><span class="live ${o.on?'':'off'}">${o.txt}</span></section>
+    <div class="eyebrow">Wellness Club</div><h1 class="serif xl" style="margin:6px 0 6px">Moon</h1><p class="mu" style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin:0 0 14px">San Telmo Town Center</p><span class="live ${o.on?'':'off'}">${o.txt}</span></section>
    <div class="space"></div>
    <section class="sec"><div class="eyebrow" style="margin-bottom:6px">Horario</div><div class="card" style="padding:6px 18px">
     ${HORARIO.map(h=>`<div class="hrow ${h.days.includes(dow)?'today':''}"><b>${h.d}${h.days.includes(dow)?' · hoy':''}</b><span>${hm(h.o)} – ${hm(h.c)}</span></div>`).join('')}</div></section>
+   <div class="space2"></div>
+   <section class="sec"><div class="eyebrow" style="margin-bottom:12px">Servicios incluidos</div><div class="svc"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M7 7v10M17 7v10M4 17h6M14 17h6M10 10l4 4"/></svg><span>Recepción y control de acceso</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h15l3-7M8 10h6M12 6l-2 4M5 17v3M16 17v3"/></svg><span>Área de cardio</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg><span>Zona de fuerza libre y guiada</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M12 3.5v17M9 9h.01M15 9h.01M9 15h.01M15 15h.01"/></svg><span>Lockers de uso diario</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0zM12 4V3M8 14v1M12 14v2M16 14v1M7 18v1M12 19v1M17 18v1"/></svg><span>Regaderas y vestidores</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l1 12H5L6 8zM9 8a3 3 0 0 1 6 0"/></svg><span>Espacio de atención y merch</span></div></div></section>
    <div class="space2"></div>
    <section class="sec"><div class="eyebrow" style="margin-bottom:12px">Elige tu experiencia</div>
     ${PLANS.map(p=>`<div class="pcard ${m.plan===p.id?'me':''}">${m.plan===p.id?'<span class="pill warn badge">Tu plan</span>':''}<h3>${p.n}</h3><div class="pr">${p.big} <small>${p.per}${p.eq?' · '+p.eq:''}</small></div></div>`).join('')}
