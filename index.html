@@ -111,6 +111,7 @@ h1,h2,h3,p{margin:0}
 .rwd h3{font-size:15px;font-weight:600}
 .rwd p{font-size:12.5px;color:var(--mu)}
 .rwd .go{margin-left:auto;text-align:right;flex:none}
+.btn.ghost[disabled]{opacity:.5}
 .rwd .go b{display:block;font-size:15px;margin-bottom:6px;color:var(--gold2)}
 .ledger li{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;list-style:none}
 .ledger{margin:0;padding:0}
@@ -284,20 +285,34 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .stg.on{opacity:1;border-color:rgba(201,169,107,.45)}
 .stg b{font-size:9.5px;font-weight:500;line-height:1.2}.stg small{font-size:9px;color:var(--mu)}
 .phases.mini i{width:7px;height:7px}
+.card,.track,.tile,.rwd,.routine,.minicard,.mission,.pcard{background-image:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 60%);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.nav>div{position:relative}
+.navind{position:absolute;top:4px;bottom:4px;left:0;border-radius:99px;background:var(--bone);transition:transform .5s cubic-bezier(.3,1.35,.5,1),width .3s var(--out);z-index:0;box-shadow:0 6px 20px rgba(242,237,228,.18)}
+.nav button{position:relative;z-index:1}
+.nav button.on{background:none;color:#0a0a0a}
+#splash{position:fixed;inset:0;z-index:200;background:#050505;display:flex;align-items:center;justify-content:center;animation:splashout 1.7s var(--out) forwards;pointer-events:none}
+#splash img{width:min(52vw,210px);animation:splashin 1.1s var(--out) both}
+#splash::after{content:"";position:absolute;width:70vmin;height:70vmin;border-radius:50%;background:radial-gradient(closest-side,rgba(230,204,148,.22),transparent);animation:halo 3s ease-in-out infinite}
+@keyframes splashin{from{opacity:0;transform:scale(.9);filter:blur(8px)}}
+@keyframes splashout{0%,70%{opacity:1}100%{opacity:0;visibility:hidden}}
+.flash{position:fixed;inset:0;z-index:70;pointer-events:none;background:radial-gradient(circle at 50% 42%,rgba(230,204,148,.55),transparent 60%);animation:flash 1s var(--out) forwards}
+@keyframes flash{from{opacity:1}to{opacity:0}}
 .phasehero{display:flex;justify-content:center;padding:30px 0 16px;width:auto;margin:0}
 .phasehero .phases{gap:clamp(8px,3vw,14px)}
-.phasehero .phases i{width:clamp(34px,11.5vw,54px);height:auto;aspect-ratio:1;transition:opacity .6s var(--out)}
+.phasehero .phases i{width:clamp(38px,13vw,62px);height:auto;aspect-ratio:1;transition:opacity .6s var(--out)}
 .phasehero .phases i:not([style*=".28"]){filter:drop-shadow(0 0 14px rgba(230,204,148,.35))}
 .phasehero.happy .phases i:not([style*=".28"]){filter:drop-shadow(0 0 22px rgba(230,204,148,.8))}
 </style>
 <script src="exercises.js"></script>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><img src="img/logo-full.png" alt=""></div>
 <div id="root"></div>
 <script>
 /* ============ Moon Club — PWA demo (datos en este dispositivo) ============ */
 const $=(s,r=document)=>r.querySelector(s);
-const KEY='moonclub.v3';
+(()=>{const sp=document.getElementById('splash');try{if(sessionStorage.getItem('moon.splash')){sp.remove();return}sessionStorage.setItem('moon.splash','1')}catch(e){}setTimeout(()=>sp.remove(),1800)})();
+const KEY='moonclub.v4';
 const STAGES=[
  {n:'Luna nueva',min:0,say:'Tu primera visita enciende la primera fase.'},
  {n:'Creciente',min:6,say:'Ya llevas tus primeras visitas. Sigue así.'},
@@ -349,11 +364,11 @@ const weekStart=d=>{const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.ge
 const wkey=d=>todayStr(weekStart(d));
 function seed(){
   const members=[];
-  return {v:3,members,me:null,
+  return {v:4,members,me:null,
     rewards:[
-     {id:'r1',name:'Acceso a un evento o activación Moon',desc:'Lugar en una activación o evento de la comunidad Moon.',cost:250,icon:'spark',active:true},
-     {id:'r2',name:'Beneficio con un aliado Moon',desc:'Un beneficio con uno de los aliados seleccionados de Moon.',cost:300,icon:'tag',active:true},
-     {id:'r3',name:'Merch Moon',desc:'Un artículo del merch oficial del club.',cost:800,icon:'shirt',active:true}],
+     {id:'r1',name:'Acceso a un evento o activación Moon',short:'Evento',desc:'Lugar en una activación o evento de la comunidad Moon.',cost:250,icon:'spark',active:true},
+     {id:'r2',name:'Beneficio con un aliado Moon',short:'Aliado',desc:'Un beneficio con uno de los aliados seleccionados de Moon.',cost:300,icon:'tag',active:true},
+     {id:'r3',name:'Merch Moon',short:'Merch',desc:'Un artículo del merch oficial del club.',cost:800,icon:'shirt',active:true}],
     redemptions:[],
     settings:{pin:'2026',perVisit:10,weeklyGoal:3,weeklyBonus:20,streakBonus:{4:50,8:120,12:200},salt:Math.random().toString(36).slice(2,8)}};
 }
@@ -365,7 +380,7 @@ function rebuildLedger(visits,per,goal){
   return l;
 }
 let S=load();
-function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.v===3)return r}catch(e){}const s=seed();localStorage.setItem(KEY,JSON.stringify(s));return s}
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.v===4)return r}catch(e){}const s=seed();localStorage.setItem(KEY,JSON.stringify(s));return s}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const me=()=>S.members.find(m=>m.id===S.me);
 const bal=m=>m.ledger.reduce((a,b)=>a+b.amt,0);
@@ -427,6 +442,10 @@ function render(){
    <main id="view"></main></div>
    <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['luna','Luna','spark'],['moon','Moon','clock'],['premios','Premios','gift'],['yo','Perfil','user']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
   root.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
+  {const nv=root.querySelector('.nav>div'),on=nv.querySelector('button.on');if(on){const ind=document.createElement('i');ind.className='navind';nv.prepend(ind);
+   if(window.__ni!=null){ind.style.transition='none';ind.style.width=window.__nw+'px';ind.style.transform=`translateX(${window.__ni}px)`;void ind.offsetWidth;ind.style.transition=''}
+   ind.style.width=on.offsetWidth+'px';ind.style.transform=`translateX(${on.offsetLeft}px)`;window.__ni=on.offsetLeft;window.__nw=on.offsetWidth}}
+  {const el=$('#bal'),to=bal(m),from=window.__bal;window.__bal=to;if(el&&from!=null&&from!==to&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const t0=performance.now();const tick=t=>{const k=Math.min(1,(t-t0)/900),e=1-Math.pow(1-k,3);el.textContent=nf(Math.round(from+(to-from)*e));if(k<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)}}
   const vw=$('#view');vw.classList.toggle('enter',window.__lt!==tab);window.__lt=tab;clearTimeout(window.__et);window.__et=setTimeout(()=>vw.classList.remove('enter'),900);
   views[tab](m,vw);
 }
@@ -455,7 +474,7 @@ function viewHome(m,v){
   <section class="sec"><button class="btn gold big ${done?'':'pulse'}" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
    <p class="mu" style="text-align:center;font-size:12px;margin-top:10px">${done?'Vuelve mañana por más destellos.':`+${S.settings.perVisit} destellos. El código está en recepción.`}</p></section>
   <div class="space"></div>
-  <section class="sec"><div class="tiles">${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).slice(0,4).map(r=>`<button class="tile ${b>=r.cost?'open':''}" data-pr="1"><span>${icon(r.icon)}</span><b>${esc(r.name.split(' ').slice(0,2).join(' '))}</b><small>${nf(r.cost)}</small></button>`).join('')}</div></section>
+  <section class="sec"><div class="tiles">${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).slice(0,4).map(r=>`<button class="tile ${b>=r.cost?'open':''}" data-pr="1"><span>${icon(r.icon)}</span><b>${esc(r.short||r.name)}</b><small>${nf(r.cost)}</small></button>`).join('')}</div></section>
   <div class="space2"></div>
   <section class="sec"><div class="card">
     <div class="row sp"><span class="eyebrow">Esta semana</span><b style="font-weight:500">${Math.min(wk,goal)} de ${goal}</b></div>
@@ -510,6 +529,7 @@ function celebrate(r){
   w.innerHTML=luna(stageOf(m),{happy:true})+`<div class="plus">+${r.gain}</div><div class="sparks">${Array.from({length:16},(_,i)=>{const a=i/16*Math.PI*2,d=90+Math.random()*80;return `<i style="--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-20}px;animation-delay:${Math.random()*.15}s"></i>`}).join('')}</div>`;
   w.firstElementChild.classList.add('bump');
   setTimeout(()=>{const s=$('#lunawrap');if(s)s.innerHTML=luna(stageOf(m))},2400);
+  {const fl=document.createElement('div');fl.className='flash';document.body.appendChild(fl);setTimeout(()=>fl.remove(),1100)}
   toast(r.extra.length?r.extra.join(' · '):'Visita registrada');
   if(navigator.vibrate)navigator.vibrate(30);
 }
@@ -762,7 +782,7 @@ function viewPremios(m,v){
   const b=bal(m);const mine=S.redemptions.filter(x=>x.mid===m.id);
   v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">Premios</h1>
    <p class="mu" style="font-size:13.5px;margin:4px 0 18px">Canjéalos en recepción mostrando tu código.</p>
-   ${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).map(r=>`<div class="rwd"><div class="ic">${icon(r.icon)}</div><div><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p></div><div class="go"><b>${nf(r.cost)}</b><button class="btn sm ${b>=r.cost?'gold':'ghost'}" data-r="${r.id}" ${b<r.cost?'disabled':''}>Canjear</button></div></div>`).join('')}
+   ${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).map(r=>`<div class="rwd"><div class="ic">${icon(r.icon)}</div><div style="flex:1;min-width:0"><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p><div class="bar" style="height:5px;margin-top:10px"><i style="width:${Math.min(100,b/r.cost*100)}%"></i></div></div><div class="go"><b>${nf(r.cost)}</b><button class="btn sm ${b>=r.cost?'gold':'ghost'}" data-r="${r.id}" ${b<r.cost?'disabled':''}>Canjear</button></div></div>`).join('')}
    ${mine.length?`<div class="space"></div><div class="eyebrow" style="margin-bottom:10px">Mis canjes</div>${mine.map(x=>`<div class="card row sp" style="margin-bottom:10px"><div><b style="font-weight:600">${esc(x.name)}</b><div class="mu" style="font-size:12px">${fmtD(x.ts)} · ${x.code}</div></div><span class="pill ${x.status==='pendiente'?'warn':'ok'}">${x.status}</span></div>`).join('')}`:''}
   </section>`;
   v.querySelectorAll('[data-r]').forEach(bn=>bn.onclick=()=>{
