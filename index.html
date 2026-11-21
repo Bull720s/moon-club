@@ -156,7 +156,7 @@ td input{width:90px;height:36px;padding:0 10px;background:var(--card2);border:1p
 .qrwrap{background:#fff;padding:14px;border-radius:20px;width:max-content;margin:14px auto}
 .qrwrap svg,.qrwrap img{display:block;width:210px;height:210px}
 .space{height:18px}.space2{height:28px}
-.logo{display:block;height:30px;width:auto}
+.logo{display:block;height:46px;width:auto}
 .logo.big{height:auto;width:min(62vw,250px);margin:0 auto}
 .photo{position:relative;overflow:hidden}
 .photo>img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;opacity:.55;filter:grayscale(.35) contrast(1.05)}
@@ -289,7 +289,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 <script>
 /* ============ Moon Club — PWA demo (datos en este dispositivo) ============ */
 const $=(s,r=document)=>r.querySelector(s);
-const KEY='moonclub.v2';
+const KEY='moonclub.v3';
 const STAGES=[
  {n:'Luna nueva',min:0,say:'Tu primera visita enciende la primera fase.'},
  {n:'Creciente',min:6,say:'Ya llevas tus primeras visitas. Sigue así.'},
@@ -341,14 +341,11 @@ const weekStart=d=>{const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.ge
 const wkey=d=>todayStr(weekStart(d));
 function seed(){
   const members=[];
-  return {v:2,members,me:null,
+  return {v:3,members,me:null,
     rewards:[
-     {id:'r1',name:'Batido de proteína',desc:'Un batido en recepción.',cost:200,icon:'cup',active:true},
-     {id:'r2',name:'Pase para un invitado',desc:'Un día completo de acceso para quien tú elijas.',cost:350,icon:'people',active:true},
-     {id:'r3',name:'Clase de Pilates Reformer',desc:'Una sesión, sujeta a lugar.',cost:500,icon:'reformer',active:true},
-     {id:'r4',name:'Botella Moon',desc:'La botella negra con las fases de la luna.',cost:650,icon:'bottle',active:true},
-     {id:'r5',name:'Playera Moon',desc:'Merch oficial del club.',cost:1200,icon:'shirt',active:true},
-     {id:'r6',name:'Descuento en tu renovación',desc:'$100 de descuento en tu siguiente mensualidad.',cost:1500,icon:'tag',active:true}],
+     {id:'r1',name:'Acceso a un evento o activación Moon',desc:'Lugar en una activación o evento de la comunidad Moon.',cost:250,icon:'spark',active:true},
+     {id:'r2',name:'Beneficio con un aliado Moon',desc:'Un beneficio con uno de los aliados seleccionados de Moon.',cost:300,icon:'tag',active:true},
+     {id:'r3',name:'Merch Moon',desc:'Un artículo del merch oficial del club.',cost:800,icon:'shirt',active:true}],
     redemptions:[],
     settings:{pin:'2026',perVisit:10,weeklyGoal:3,weeklyBonus:20,streakBonus:{4:50,8:120,12:200},salt:Math.random().toString(36).slice(2,8)}};
 }
@@ -360,7 +357,7 @@ function rebuildLedger(visits,per,goal){
   return l;
 }
 let S=load();
-function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.v===2)return r}catch(e){}const s=seed();localStorage.setItem(KEY,JSON.stringify(s));return s}
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.v===3)return r}catch(e){}const s=seed();localStorage.setItem(KEY,JSON.stringify(s));return s}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const me=()=>S.members.find(m=>m.id===S.me);
 const bal=m=>m.ledger.reduce((a,b)=>a+b.amt,0);
