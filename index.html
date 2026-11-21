@@ -289,7 +289,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 <script>
 /* ============ Moon Club — PWA demo (datos en este dispositivo) ============ */
 const $=(s,r=document)=>r.querySelector(s);
-const KEY='moonclub.v1';
+const KEY='moonclub.v2';
 const STAGES=[
  {n:'Luna nueva',min:0,say:'Tu primera visita enciende la primera fase.'},
  {n:'Creciente',min:6,say:'Ya llevas tus primeras visitas. Sigue así.'},
@@ -340,16 +340,8 @@ const fromStr=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)
 const weekStart=d=>{const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);x.setHours(0,0,0,0);return x};
 const wkey=d=>todayStr(weekStart(d));
 function seed(){
-  const names=['Ana Sofía R.','Mariana G.','Carlos M.','Daniela P.','Luis Fernando H.','Valeria S.','Diego A.','Regina T.','Emilio C.','Paula V.','Javier L.','Camila O.'];
-  const members=names.map((n,i)=>{
-    const visits=[];const intensity=[.9,.8,.7,.6,.85,.5,.4,.75,.3,.65,.2,.55][i];
-    for(let d=0;d<70;d++){const dt=new Date();dt.setDate(dt.getDate()-d-(i%3===0?0:1));
-      if(Math.random()<intensity*(((dt.getDay()+6)%7)<5?0.62:0.22))visits.push(todayStr(dt));}
-    const v=[...new Set(visits)].sort();
-    return {id:'m'+i,name:n,phone:'449'+String(1000000+i*73211).slice(0,7),plan:['mensual','mensual','plus','estandar'][i%4],since:v[0]||todayStr(),visits:v,ledger:[],redeemed:0};
-  });
-  members.forEach(m=>{m.ledger=rebuildLedger(m.visits,10,3);});
-  return {v:1,members,me:null,
+  const members=[];
+  return {v:2,members,me:null,
     rewards:[
      {id:'r1',name:'Batido de proteína',desc:'Un batido en recepción.',cost:200,icon:'cup',active:true},
      {id:'r2',name:'Pase para un invitado',desc:'Un día completo de acceso para quien tú elijas.',cost:350,icon:'people',active:true},
@@ -368,7 +360,7 @@ function rebuildLedger(visits,per,goal){
   return l;
 }
 let S=load();
-function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.v===1)return r}catch(e){}const s=seed();localStorage.setItem(KEY,JSON.stringify(s));return s}
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.v===2)return r}catch(e){}const s=seed();localStorage.setItem(KEY,JSON.stringify(s));return s}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const me=()=>S.members.find(m=>m.id===S.me);
 const bal=m=>m.ledger.reduce((a,b)=>a+b.amt,0);
@@ -754,10 +746,10 @@ function renderWelcome(){
    <div class="big">Cada visita<br>suma a tu ciclo.</div>
    <p class="mu" style="font-size:14px;max-width:300px;margin:0 auto 26px">Entrena, junta destellos y cámbialos por premios en Moon Wellness Club.</p>
    <button class="btn gold" id="new">Crear mi cuenta</button><div class="space"></div>
-   <button class="btn ghost" id="demo">Ver como socio de ejemplo</button>
+   <button class="btn ghost" id="demo">Probar la app</button>
    <p class="mu" style="font-size:12px;margin-top:22px"><a href="#/admin" style="color:var(--mu)">Entrada del club</a></p>
   </div></div>`;
-  $('#demo').onclick=()=>{S.me=S.members[0].id;save();render()};
+  $('#demo').onclick=()=>{let d=S.members.find(x=>x.id==='demo');if(!d){d={id:'demo',name:'Cuenta de prueba',phone:'0000000000',plan:'mensual',since:todayStr(),visits:[],ledger:[{ts:todayStr(),amt:20,why:'Bienvenida'}],redeemed:0};S.members.push(d)}S.me=d.id;save();render()};
   $('#new').onclick=()=>sheet(`<h2>Bienvenido a Moon</h2><p class="mu" style="font-size:13.5px;margin-bottom:20px">Para que recepción te reconozca.</p>
    <label class="field"><span>Nombre</span><input id="n" autocomplete="name"></label>
    <label class="field"><span>Teléfono</span><input id="p" inputmode="tel" autocomplete="tel"></label>
@@ -805,6 +797,7 @@ function drawQR(el,text){
   const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';s.integrity='sha384-8FWZA6BGMXhsfO+BLtrJK0We6gg5o1JyO8xQm6peWDEUs17ACA5ziE/NIAkl9z2k';s.crossOrigin='anonymous';s.onload=go;s.onerror=go;document.head.appendChild(s);
 }
 function aSocios(v){
+  if(!S.members.length){v.innerHTML='<h2 class="serif" style="font-size:30px;margin-bottom:14px">Socios</h2><p class="mu">Todavía no hay socios registrados. Aparecerán aquí cuando creen su cuenta en la app.</p>';return}
   const rows=S.members.map(m=>({m,last:m.visits[m.visits.length-1]||'—',sw:streakWeeks(m),b:bal(m)})).sort((a,b)=>String(b.last).localeCompare(String(a.last)));
   v.innerHTML=`<div class="row sp" style="margin-bottom:14px"><h2 class="serif" style="font-size:30px">${S.members.length} socios</h2></div>
   <div class="card scroll"><table><thead><tr><th>Socio</th><th>Plan</th><th>Visitas</th><th>Racha</th><th>Destellos</th><th>Última</th></tr></thead><tbody>
@@ -832,7 +825,7 @@ function aAjustes(v){
    <label class="field"><span>Bono por semana completa</span><input id="a3" type="number" value="${s.weeklyBonus}"></label>
    <label class="field"><span>PIN del panel</span><input id="a4" maxlength="4" value="${s.pin}"></label>
    <button class="btn gold" id="sv">Guardar</button></div>
-   <div class="space"></div><div class="card"><div class="eyebrow">Demo</div><p class="mu" style="font-size:13px;margin:8px 0 14px">Los datos de esta versión viven en este dispositivo. Para varios teléfonos a la vez se conecta una base de datos.</p><button class="btn ghost sm" id="rs">Restablecer datos de ejemplo</button></div>`;
+   <div class="space"></div><div class="card"><div class="eyebrow">Demo</div><p class="mu" style="font-size:13px;margin:8px 0 14px">Los datos de esta versión viven en este dispositivo. Para varios teléfonos a la vez se conecta una base de datos.</p><button class="btn ghost sm" id="rs">Borrar los datos de esta demo</button></div>`;
   $('#sv').onclick=()=>{s.perVisit=Math.max(1,+$('#a1').value||10);s.weeklyGoal=Math.min(7,Math.max(1,+$('#a2').value||3));s.weeklyBonus=Math.max(0,+$('#a3').value||0);const p=$('#a4').value.replace(/\D/g,'');if(p.length===4)s.pin=p;save();toast('Guardado')};
   $('#rs').onclick=()=>{if(confirm('Se borran todos los datos de esta demo. ¿Seguir?')){localStorage.removeItem(KEY);S=load();adminOK=false;location.hash='#/';render()}};
 }
