@@ -626,6 +626,39 @@ h1.serif{font-size:26px!important;font-weight:700!important;letter-spacing:0;lin
 .tstats span{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(237,230,216,.6);line-height:1.3}
 .card,.track,.pcard,.routine,.minicard,.rwd,.mission,.exrow,.wex,.stg,.svc div,.notice,.tile,.flist,.pstats div{border-radius:8px}
 .stg .phases{display:none}.stg{padding:12px 2px;gap:4px}.stg b{font-size:10.5px}.stg small{font-size:9px}
+/* ===== v13: sin cuadros. Filas con lineas finas, secciones con titulo, estilo app nativa ===== */
+:root{--hl:rgba(237,230,216,.12)}
+.sh{font-size:17px;font-weight:700;letter-spacing:0}
+.lrows{margin-top:8px;border-top:1px solid var(--hl)}
+.lrow{display:flex;align-items:center;gap:14px;width:100%;padding:14px 0;border-bottom:1px solid var(--hl);text-align:left;color:var(--bone);transition:opacity .15s}
+.lrow:active{opacity:.55}
+.lic{flex:none;width:40px;height:40px;border-radius:50%;background:rgba(237,230,216,.08);display:flex;align-items:center;justify-content:center}
+.lic>svg{width:20px;height:20px}
+.lic.ringic{background:none}.lic .ringw{width:40px!important;height:40px!important}
+.lbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.lbody b{font-size:15px;font-weight:600}.lbody small{font-size:12.5px;color:rgba(237,230,216,.62)}
+.lbody .bar.thin{height:3px;margin-top:8px}.lbody .bar.thin>i{background:var(--amb)}
+.chev{flex:none;width:18px;height:18px;color:rgba(237,230,216,.4)}
+/* quitar cajas */
+.fsum{background:none;padding:0;margin-top:14px}
+.flist{background:none;border-radius:0;border-top:1px solid var(--hl)}
+.frow{padding-left:0}
+.fadd{padding-left:0}
+.tstats,.pstats{gap:0;border-top:1px solid var(--hl);border-bottom:1px solid var(--hl)}
+.tstats div,.pstats div{background:none;border-radius:0;padding:14px 12px;border-right:1px solid var(--hl)}
+.tstats div:first-child,.pstats div:first-child{padding-left:0}
+.tstats div:last-child,.pstats div:last-child{border-right:0}
+.tstats{margin-bottom:18px}.pstats{margin-bottom:18px}
+.minicard,.routine{background:none;border-radius:0;border:0;border-bottom:1px solid var(--hl);padding:14px 0;margin:0}
+.minicard:last-child{border-bottom:0}
+.routine{padding:16px 0}
+.rwd{background:none;border-radius:0;border:0;border-bottom:1px solid var(--hl);padding:16px 0;margin:0}
+.rwd .ic{background:rgba(237,230,216,.08);border-radius:50%}
+.mission{background:none;border-radius:0;border:0;border-bottom:1px solid var(--hl)}
+.exrow{background:none;border-radius:0;border:0;border-bottom:1px solid var(--hl)}
+.card.plan{background:var(--s1)}
+.heat{margin-top:14px}
+.week{margin-top:0}
 </style>
 <script src="exercises.js"></script>
 </head>
@@ -782,7 +815,8 @@ function viewHome(m,v){
   const days=['L','M','M','J','V','S','D'];const ws=weekStart(new Date());
   const wkDays=days.map((d,i)=>{const x=new Date(ws);x.setDate(x.getDate()+i);return {d,on:m.visits.includes(todayStr(x)),today:todayStr(x)===t}});
   const g=foodOf(m).goal,tot=dayTot(m,t),left=Math.round(g.k-tot.k);
-  const nW=LG(m).length;
+  const wkW=LG(m).filter(w=>wkey(fromStr(w.ts))===wkey(new Date())).length;
+  const chev='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
   const dts=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   v.innerHTML=`<section class="hero photo" style="margin-top:-62px"><img class="bg" src="img/gym-1.jpg" alt="">
     <div class="eyebrow">${esc(dts)}</div>
@@ -791,28 +825,16 @@ function viewHome(m,v){
   </section>
   <section class="sec" style="margin-top:14px"><button class="btn gold big ${done?'':'pulse'}" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
    <p class="mu" style="text-align:center;font-size:12px;margin-top:10px">${done?'Vuelve mañana por más destellos.':`+${S.settings.perVisit} destellos. El código está en recepción.`}</p></section>
-  <div class="space"></div>
-  <section class="sec"><div class="grid2">
-   <button class="card hcard" id="gtrain"><span class="eyebrow">Entreno</span><b class="big">${nW}</b><small>${nW===1?'sesión registrada':'sesiones registradas'}</small><em>Ver rutinas</em></button>
-   <button class="card hcard" id="gfood"><span class="eyebrow">Calorías</span><b class="big ${left<0?'ov':''}">${nf(Math.abs(left))}</b><small>${left<0?'excedidas hoy':'restantes hoy'}</small><em>${nf(Math.round(tot.k))} de ${nf(g.k)} kcal</em></button>
-  </div></section>
-  <div class="space"></div>
-  <section class="sec"><div class="track" id="goto" role="button" tabindex="0" aria-label="Ver premios">
-    <span class="eyebrow">Siguiente premio</span>
-    <div class="nb"><b>${nf(b)}</b><span>/ ${nf(nxt.cost)} DESTELLOS</span></div>
-    <div class="trk"><div class="bar"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></div><span class="chest ${b>=nxt.cost?'ready':''}">${icon(nxt.icon)}</span></div>
-    <p class="mu" style="font-size:12.5px;margin-top:10px">${esc(nxt.name)}</p>
-  </div></section>
-  <div class="space"></div>
-  <section class="sec"><div class="card">
-    <div class="row sp"><span class="eyebrow">Esta semana</span><b style="font-weight:500">${Math.min(wk,goal)} de ${goal}</b></div>
-    <div class="space"></div>
-    <div class="week">${wkDays.map(x=>`<span class="${x.on?'on':''}" style="${x.today&&!x.on?'border-color:var(--bone);color:var(--bone)':''}">${x.on?ICONS.check:x.d}</span>`).join('')}</div>
-  </div></section>
-  <div class="space"></div>
-  <section class="sec"><div class="card"><div class="row sp"><span class="eyebrow">Constancia</span><b style="font-weight:500">${m.visits.length} visitas</b></div><div class="heat">${(()=>{const o=[];const st0=weekStart(new Date());for(let w=11;w>=0;w--){let col='';for(let d=0;d<7;d++){const x=new Date(st0);x.setDate(x.getDate()-w*7+d);const k=todayStr(x);col+=`<i class="${m.visits.includes(k)?'on':''} ${x>new Date()?'fut':''}"></i>`}o.push(`<div>${col}</div>`)}return o.join('')})()}</div></div></section>
-  <div class="space"></div>
-  <section class="sec"><button class="card hcard mooncard" id="gomoon"><span class="eyebrow">Moon hoy</span><b>${openNow().txt}</b><em>Horario, servicios y membresías</em></button></section>`;
+  <section class="sec" style="margin-top:26px"><h2 class="sh">Hoy</h2>
+   <div class="lrows">
+    <button class="lrow" id="gtrain"><span class="lic">${ICONS.dumb}</span><span class="lbody"><b>Entrenar</b><small>${wkW?`${wkW} ${wkW===1?'sesión':'sesiones'} esta semana`:'Empieza una rutina'}</small></span>${chev}</button>
+    <button class="lrow" id="gfood"><span class="lic ringic">${ring(Math.min(tot.k,g.k),g.k,40,4,'','',left<0?'ov':'lf')}</span><span class="lbody"><b>Calorías</b><small>${left<0?`${nf(-left)} kcal de más`:`${nf(left)} kcal restantes`} · ${nf(Math.round(tot.k))} de ${nf(g.k)}</small></span>${chev}</button>
+    <button class="lrow" id="goto"><span class="lic">${icon(nxt.icon)}</span><span class="lbody"><b>${esc(nxt.name)}</b><small>${nf(b)} de ${nf(nxt.cost)} destellos</small><span class="bar thin"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></span></span>${chev}</button>
+    <button class="lrow" id="gomoon"><span class="lic">${ICONS.clock}</span><span class="lbody"><b>Moon</b><small>${openNow().txt}</small></span>${chev}</button>
+   </div></section>
+  <section class="sec" style="margin-top:28px"><div class="row sp"><h2 class="sh">Esta semana</h2><span class="mu" style="font-size:12px">${Math.min(wk,goal)} de ${goal}</span></div>
+    <div class="week" style="margin-top:12px">${wkDays.map(x=>`<span class="${x.on?'on':''}" style="${x.today&&!x.on?'border-color:var(--bone);color:var(--bone)':''}">${x.on?ICONS.check:x.d}</span>`).join('')}</div></section>
+  <section class="sec" style="margin-top:28px"><div class="row sp"><h2 class="sh">Constancia</h2><span class="mu" style="font-size:12px">${m.visits.length} visitas</span></div><div class="heat">${(()=>{const o=[];const st0=weekStart(new Date());for(let w=11;w>=0;w--){let col='';for(let d=0;d<7;d++){const x=new Date(st0);x.setDate(x.getDate()-w*7+d);const k=todayStr(x);col+=`<i class="${m.visits.includes(k)?'on':''} ${x>new Date()?'fut':''}"></i>`}o.push(`<div>${col}</div>`)}return o.join('')})()}</div></section>`;
   const go=k=>()=>{tab=k;render();window.scrollTo(0,0)};
   $('#goto').onclick=go('premios');$('#gtrain').onclick=go('train');$('#gfood').onclick=go('food');$('#gomoon').onclick=go('moon');
   $('#ci').onclick=()=>openCheckin(m);
