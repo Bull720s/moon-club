@@ -659,6 +659,12 @@ h1.serif{font-size:26px!important;font-weight:700!important;letter-spacing:0;lin
 .card.plan{background:var(--s1)}
 .heat{margin-top:14px}
 .week{margin-top:0}
+.hrow2{display:flex;align-items:center;gap:14px}
+.hrow2 .av{width:52px;height:52px;font-size:22px}
+.hrow2 .stage-name h1{margin:0}
+.lrow.static{cursor:default}.lrow.static:active{opacity:1}
+.lrow.static .lbody b{font-size:14.5px}
+.hrow2 .hl{max-width:none!important;white-space:nowrap;letter-spacing:.08em;font-size:10.5px!important}
 </style>
 <script src="exercises.js"></script>
 </head>
@@ -793,12 +799,12 @@ function render(){
   document.body.classList.remove('admin');
   if(!me())return renderWelcome();
   const m=me();
-  const views={home:viewHome,train:viewTrain,lib:viewLib,food:viewFood,luna:viewLuna,moon:viewMoon,premios:(m,v)=>{viewLuna(m,v);const e=$('#premv');if(e)setTimeout(()=>e.scrollIntoView({block:'start'}),30)},yo:viewYo};
+  const views={home:viewHome,train:viewTrain,lib:viewLib,food:viewFood,luna:viewLuna,moon:viewMoon,yo:(m,v)=>viewHome(m,v),premios:(m,v)=>{viewLuna(m,v);const e=$('#premv');if(e)setTimeout(()=>e.scrollIntoView({block:'start'}),30)},yo:viewYo};
   if(!views[tab])tab='home';
   root.innerHTML=`<div class="app">
    <header class="top"><img class="logo" src="img/logo-full.png" alt="Moon Wellness Club"><div class="coins">${ICONS.spark}<span id="bal">${nf(bal(m))}</span></div></header>
    <main id="view"></main></div>
-   <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['food','Comidas','fork'],['luna','Luna','spark'],['yo','Perfil','user']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train')||(tab==='moon'&&k==='home')||(tab==='premios'&&k==='luna'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
+   <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['food','Comidas','fork'],['luna','Luna','spark']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train')||(tab==='moon'&&k==='home')||(tab==='premios'&&k==='luna')||(tab==='yo'&&k==='home'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
   root.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{if(navigator.vibrate)navigator.vibrate(6);tab=b.dataset.t;render();window.scrollTo(0,0)});
   {const nv=root.querySelector('.nav>div'),on=nv.querySelector('button.on');if(on){const ind=document.createElement('i');ind.className='navind';nv.prepend(ind);
    if(window.__ni!=null){ind.style.transition='none';ind.style.width=window.__nw+'px';ind.style.transform=`translateX(${window.__ni}px)`;void ind.offsetWidth;ind.style.transition=''}
@@ -820,12 +826,13 @@ function viewHome(m,v){
   const dts=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   v.innerHTML=`<section class="hero photo" style="margin-top:-62px"><img class="bg" src="img/gym-1.jpg" alt="">
     <div class="eyebrow">${esc(dts)}</div>
-    <div class="stage-name"><h1>Hola, ${esc(m.name.split(' ')[0])}</h1></div>
-    <p class="mu hl">${openNow().txt}</p>
+    <div class="hrow2"><div class="av">${esc(m.name.trim().charAt(0).toUpperCase())}</div><div><div class="stage-name"><h1>Hola, ${esc(m.name.split(' ')[0])}</h1></div>
+    <p class="mu hl" style="margin-top:6px">Socio desde ${fmtD(m.since)}</p></div></div>
   </section>
   <section class="sec" style="margin-top:14px"><button class="btn gold big ${done?'':'pulse'}" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
    <p class="mu" style="text-align:center;font-size:12px;margin-top:10px">${done?'Vuelve mañana por más destellos.':`+${S.settings.perVisit} destellos. El código está en recepción.`}</p></section>
-  <section class="sec" style="margin-top:26px"><h2 class="sh">Hoy</h2>
+  <section class="sec" style="margin-top:22px"><div class="pstats"><div><b>${m.visits.length}</b><span>Visitas</span></div><div><b>${streakWeeks(m)}</b><span>Semanas de racha</span></div><div><b>${nf(b)}</b><span>Destellos</span></div></div></section>
+  <section class="sec" style="margin-top:6px"><h2 class="sh">Hoy</h2>
    <div class="lrows">
     <button class="lrow" id="gtrain"><span class="lic">${ICONS.dumb}</span><span class="lbody"><b>Entrenar</b><small>${wkW?`${wkW} ${wkW===1?'sesión':'sesiones'} esta semana`:'Empieza una rutina'}</small></span>${chev}</button>
     <button class="lrow" id="gfood"><span class="lic ringic">${ring(Math.min(tot.k,g.k),g.k,40,4,'','',left<0?'ov':'lf')}</span><span class="lbody"><b>Calorías</b><small>${left<0?`${nf(-left)} kcal de más`:`${nf(left)} kcal restantes`} · ${nf(Math.round(tot.k))} de ${nf(g.k)}</small></span>${chev}</button>
@@ -834,7 +841,13 @@ function viewHome(m,v){
    </div></section>
   <section class="sec" style="margin-top:28px"><div class="row sp"><h2 class="sh">Esta semana</h2><span class="mu" style="font-size:12px">${Math.min(wk,goal)} de ${goal}</span></div>
     <div class="week" style="margin-top:12px">${wkDays.map(x=>`<span class="${x.on?'on':''}" style="${x.today&&!x.on?'border-color:var(--bone);color:var(--bone)':''}">${x.on?ICONS.check:x.d}</span>`).join('')}</div></section>
-  <section class="sec" style="margin-top:28px"><div class="row sp"><h2 class="sh">Constancia</h2><span class="mu" style="font-size:12px">${m.visits.length} visitas</span></div><div class="heat">${(()=>{const o=[];const st0=weekStart(new Date());for(let w=11;w>=0;w--){let col='';for(let d=0;d<7;d++){const x=new Date(st0);x.setDate(x.getDate()-w*7+d);const k=todayStr(x);col+=`<i class="${m.visits.includes(k)?'on':''} ${x>new Date()?'fut':''}"></i>`}o.push(`<div>${col}</div>`)}return o.join('')})()}</div></section>`;
+  <section class="sec" style="margin-top:28px"><div class="row sp"><h2 class="sh">Constancia</h2><span class="mu" style="font-size:12px">${m.visits.length} visitas</span></div><div class="heat">${(()=>{const o=[];const st0=weekStart(new Date());for(let w=11;w>=0;w--){let col='';for(let d=0;d<7;d++){const x=new Date(st0);x.setDate(x.getDate()-w*7+d);const k=todayStr(x);col+=`<i class="${m.visits.includes(k)?'on':''} ${x>new Date()?'fut':''}"></i>`}o.push(`<div>${col}</div>`)}return o.join('')})()}</div></section>
+  <section class="sec" style="margin-top:30px"><h2 class="sh">Mi cuenta</h2>
+   <div class="lrows"><div class="lrow static"><span class="lbody"><small>Membresía</small><b>${(PLANS.find(p=>p.id===m.plan)||PLANS[0]).n} · ${(PLANS.find(p=>p.id===m.plan)||PLANS[0]).p}</b></span><span class="pill ok">Activa</span></div>
+   <div class="lrow static"><span class="lbody"><small>Teléfono</small><b>${esc(m.phone)}</b></span></div></div>
+   <button class="btn ghost" style="width:100%;margin-top:18px" id="out">Cerrar sesión</button>
+   <p class="mu" style="text-align:center;font-size:12px;margin:16px 0 4px"><a href="#/admin" style="color:var(--mu)">Entrada del club</a></p></section>`;
+  $('#out').onclick=()=>{S.me=null;save();render()};
   const go=k=>()=>{tab=k;render();window.scrollTo(0,0)};
   $('#goto').onclick=go('premios');$('#gtrain').onclick=go('train');$('#gfood').onclick=go('food');$('#gomoon').onclick=go('moon');
   $('#ci').onclick=()=>openCheckin(m);
