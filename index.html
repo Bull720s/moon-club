@@ -571,6 +571,61 @@ h1.serif::after{display:none}
 .moonreal svg{display:block}
 .moonreal.happy{filter:drop-shadow(0 0 60px rgba(232,163,61,.55))}
 .lpet{animation:float 6s ease-in-out infinite}
+/* ===== v12: escala tipografica de app (Nike/Adidas), controles mas finos, movimiento natural ===== */
+body{font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+h1.serif{font-size:26px!important;font-weight:700!important;letter-spacing:0;line-height:1.1;text-transform:none}
+.hero .stage-name h1,.hero.photo .stage-name h1{font-size:30px;font-weight:700;line-height:1.05;letter-spacing:0;text-transform:none}
+.hero.photo{min-height:200px;padding:74px 20px 18px!important}
+.eyebrow{font-size:10px;letter-spacing:.16em}
+.btn{height:48px;font-size:12px;letter-spacing:.1em;padding:0 20px}
+.btn.big,.btn.gold.big{height:52px;font-size:12.5px}
+.btn.gold{padding:0 6px 0 22px}
+.btn.gold::after{width:38px;height:38px;background-size:18px}
+.btn.sm,.btn.sm.gold{height:38px;font-size:11px;padding:0 14px}
+.btn.sm.gold{padding:0 4px 0 14px}.btn.sm.gold::after{width:30px;height:30px;background-size:14px}
+.pill{font-size:10.5px;padding:5px 10px}
+.hcard .big{font-size:34px}.hcard small{font-size:12px}
+.grid2 .hcard{padding:16px;gap:4px}
+.track .nb b{font-size:38px}.track .nb{margin:8px 0 12px}
+.card,.track{padding:16px}
+.rhero{margin:12px 0 18px}.rc b{font-size:28px}.rside b{font-size:22px}
+.macs3 span{font-size:12px}.ringw.mr .rc b{font-size:15px}
+.pstats b{font-size:24px}.pstats div{padding:14px 12px}
+.prof h1.serif{font-size:24px!important}
+.av{width:56px;height:56px;font-size:24px}
+.lplate h1{font-size:28px;font-weight:700;letter-spacing:0;text-transform:none}
+.lplate p{font-size:12.5px}
+.lpet{width:min(54vw,210px)}
+.lscene{min-height:0;padding:76px 20px 20px;gap:10px}
+.rwd .go b{font-size:20px;margin-bottom:6px}.rwd h3{font-size:14px}.rwd p{font-size:12px}
+.rwd .ic{width:44px;height:44px}
+.tile small{font-size:18px}
+.pcard .pr{font-size:28px}.pcard h3,.routine h3{font-size:17px}
+.stat b{font-size:24px}
+.nav button{height:56px;font-size:9.5px;letter-spacing:.04em}
+.nav button svg{width:22px;height:22px}
+.dstrip b{font-size:14px}
+.frow b{font-size:13.5px}
+.sheet h2{font-size:18px;letter-spacing:.06em}
+.sheet{padding-top:22px}
+.sheet::before{content:"";display:block;width:36px;height:4px;border-radius:2px;background:rgba(237,230,216,.25);margin:-8px auto 16px}
+.clock{font-size:24px}
+.wex .hd h3{font-size:15px!important}
+.srow input{height:44px;font-size:16px}.srow .ok{height:44px}.srow .sn{font-size:17px}
+/* movimiento: entradas cortas y respuesta al toque */
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+#view.enter>section>*:not(img.bg),#view.enter>.chips,#view.enter>.search,#view.enter>.exrow{animation:rise .3s var(--out) both;animation-delay:calc(var(--s,0)*.04s + var(--i,0)*.025s)}
+.card:active,.tile:active,.rwd:active,.mission:active,.minicard:active,.routine:active,.hcard:active{transform:scale(.98)}
+.card,.tile,.rwd,.hcard,.minicard,.routine{transition:transform .18s var(--out)}
+.btn.pulse{animation:none}
+/* resumen en Entrenar */
+.tstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.tstats div{background:var(--s1);border-radius:6px;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.tstats b{font-size:24px;font-weight:800;line-height:.9;font-variant-numeric:tabular-nums}
+.tstats span{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(237,230,216,.6);line-height:1.3}
+.card,.track,.pcard,.routine,.minicard,.rwd,.mission,.exrow,.wex,.stg,.svc div,.notice,.tile,.flist,.pstats div{border-radius:8px}
+.stg .phases{display:none}.stg{padding:12px 2px;gap:4px}.stg b{font-size:10.5px}.stg small{font-size:9px}
 </style>
 <script src="exercises.js"></script>
 </head>
@@ -705,13 +760,13 @@ function render(){
   document.body.classList.remove('admin');
   if(!me())return renderWelcome();
   const m=me();
-  const views={home:viewHome,train:viewTrain,lib:viewLib,food:viewFood,luna:viewLuna,moon:viewMoon,premios:viewPremios,yo:viewYo};
+  const views={home:viewHome,train:viewTrain,lib:viewLib,food:viewFood,luna:viewLuna,moon:viewMoon,premios:(m,v)=>{viewLuna(m,v);const e=$('#premv');if(e)setTimeout(()=>e.scrollIntoView({block:'start'}),30)},yo:viewYo};
   if(!views[tab])tab='home';
   root.innerHTML=`<div class="app">
    <header class="top"><img class="logo" src="img/logo-full.png" alt="Moon Wellness Club"><div class="coins">${ICONS.spark}<span id="bal">${nf(bal(m))}</span></div></header>
    <main id="view"></main></div>
-   <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['food','Comidas','fork'],['luna','Luna','spark'],['premios','Premios','gift'],['yo','Perfil','user']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train')||(tab==='moon'&&k==='home'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
-  root.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
+   <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['food','Comidas','fork'],['luna','Luna','spark'],['yo','Perfil','user']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train')||(tab==='moon'&&k==='home')||(tab==='premios'&&k==='luna'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
+  root.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{if(navigator.vibrate)navigator.vibrate(6);tab=b.dataset.t;render();window.scrollTo(0,0)});
   {const nv=root.querySelector('.nav>div'),on=nv.querySelector('button.on');if(on){const ind=document.createElement('i');ind.className='navind';nv.prepend(ind);
    if(window.__ni!=null){ind.style.transition='none';ind.style.width=window.__nw+'px';ind.style.transform=`translateX(${window.__ni}px)`;void ind.offsetWidth;ind.style.transition=''}
    ind.style.width=on.offsetWidth+'px';ind.style.transform=`translateX(${on.offsetLeft}px)`;window.__ni=on.offsetLeft;window.__nw=on.offsetWidth}}
@@ -822,10 +877,12 @@ const fmtDur=s=>{const m=Math.floor(s/60),x=s%60;return `${String(m).padStart(2,
 
 function viewTrain(m,v){
   const rs=R(m);const act=S.active&&S.active[m.id];
+  const wkW=LG(m).filter(w=>wkey(fromStr(w.ts))===wkey(new Date()));const wkVol=Math.round(wkW.reduce((a,w)=>a+(w.vol||0),0));const wkMin=Math.round(wkW.reduce((a,w)=>a+(w.dur||0),0)/60);
   const lastOf=r=>{const w=[...LG(m)].reverse().find(x=>x.rid===r.id);return w?fmtD(w.ts):'Sin hacer'};
   v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">Entrenar</h1>
    <p class="mu" style="font-size:13.5px;margin:4px 0 18px">Arma tus rutinas, anota cada serie y mira cómo subes de peso.</p>
    ${act?`<div class="card" style="border-color:var(--gold);margin-bottom:16px"><div class="eyebrow gold">Entrenamiento en curso</div><h3 style="font-size:18px;font-weight:500;margin:6px 0 12px">${esc(act.name)}</h3><button class="btn gold" style="width:100%" id="cont">Continuar</button></div>`:''}
+   <div class="tstats"><div><b>${wkW.length}</b><span>Sesiones esta semana</span></div><div><b>${nf(wkVol)}</b><span>Kg levantados</span></div><div><b>${wkMin}</b><span>Minutos</span></div></div>
    <button class="btn ghost" style="width:100%;margin-bottom:18px" id="golib">${ICONS.book}Biblioteca de ejercicios</button>
    <div class="row sp" style="margin-bottom:12px"><span class="eyebrow">Mis rutinas</span><button class="btn sm ghost" id="nr">${ICONS.plus}Nueva</button></div>
    ${rs.length?rs.map(r=>`<div class="routine"><h3>${esc(r.name)}</h3><p class="mu" style="font-size:12.5px;margin-top:2px">${r.items.length} ejercicios · ${lastOf(r)}</p>
@@ -995,14 +1052,16 @@ function viewLuna(m,v){
       <div class="trk" style="margin-top:12px"><div class="bar"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></div><span class="chest ${b>=nxt.cost?'ready':''}">${icon(nxt.icon)}</span></div>
     </div>
     <button class="btn gold big ${done?'':'pulse'}" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
-    <div class="tiles ltiles">${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).slice(0,4).map(r=>`<button class="tile ${b>=r.cost?'open':''}" data-pr="1"><span>${icon(r.icon)}</span><b>${esc(r.short||r.name)}</b><small>${nf(r.cost)}</small></button>`).join('')}</div>
+    
   </section>
+  <div id="premv"></div>
   <section class="sec" style="margin-top:26px"><div class="eyebrow" style="margin-bottom:12px">Sus fases</div><div class="stages">
    ${STAGES.map((x,i)=>`<div class="stg ${i<=st?'on':''}">${phaseRow(i+1).replace(/<span class="phases">/,'<span class="phases mini">')}<b>${x.n}</b><small>${i<=st?'Desbloqueada':x.min+' visitas'}</small></div>`).join('')}
   </div></section>`;
   const pet=$('#pet'),react=()=>{pet.innerHTML=lunaPet(st,{happy:true})+`<div class="sparks">${Array.from({length:12},(_,i)=>{const a=i/12*Math.PI*2,d=80+Math.random()*70;return `<i style="--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-20}px;animation-delay:${Math.random()*.15}s"></i>`}).join('')}</div>`;pet.firstElementChild.classList.add('bump');if(navigator.vibrate)navigator.vibrate(20);clearTimeout(pet._t);pet._t=setTimeout(()=>{pet.innerHTML=lunaPet(st,{sleepy})},1500)};
   pet.onclick=react;pet.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();react()}};
   v.querySelectorAll('[data-pr]').forEach(x=>x.onclick=()=>{tab='premios';render();window.scrollTo(0,0)});
+  viewPremios(m,$('#premv'));
   const ci=$('#ci');if(ci)ci.onclick=()=>openCheckin(m);
 }
 function viewMoon(m,v){
@@ -1028,8 +1087,8 @@ function viewMoon(m,v){
 }
 function viewPremios(m,v){
   const b=bal(m);const mine=S.redemptions.filter(x=>x.mid===m.id);
-  v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif" style="font-size:34px">Premios</h1>
-   <p class="mu" style="font-size:13.5px;margin:4px 0 18px">Canjéalos en recepción mostrando tu código.</p>
+  v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif">Premios</h1>
+   <p class="mu" style="font-size:13px;margin:6px 0 14px">Canjéalos en recepción mostrando tu código.</p>
    ${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).map(r=>`<div class="rwd"><div class="ic">${icon(r.icon)}</div><div style="flex:1;min-width:0"><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p><div class="bar" style="height:5px;margin-top:10px"><i style="width:${Math.min(100,b/r.cost*100)}%"></i></div></div><div class="go"><b>${nf(r.cost)}</b><button class="btn sm ${b>=r.cost?'gold':'ghost'}" data-r="${r.id}" ${b<r.cost?'disabled':''}>Canjear</button></div></div>`).join('')}
    ${mine.length?`<div class="space"></div><div class="eyebrow" style="margin-bottom:10px">Mis canjes</div>${mine.map(x=>`<div class="card row sp" style="margin-bottom:10px"><div><b style="font-weight:600">${esc(x.name)}</b><div class="mu" style="font-size:12px">${fmtD(x.ts)} · ${x.code}</div></div><span class="pill ${x.status==='pendiente'?'warn':'ok'}">${x.status}</span></div>`).join('')}`:''}
   </section>`;
