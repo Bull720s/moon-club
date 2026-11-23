@@ -709,6 +709,9 @@ h1.serif{font-size:26px!important;font-weight:700!important;letter-spacing:0;lin
 .work{padding-bottom:200px}
 .work .wex{scroll-margin-top:130px}
 .top{background:linear-gradient(rgba(5,5,5,.94) 60%,rgba(5,5,5,0))}
+.nav button{color:rgba(237,230,216,.72);font-size:11px!important;font-weight:600}
+.nav button.on{color:var(--bone)}
+.coins{cursor:pointer;color:var(--bone)}
 </style>
 <script src="exercises.js"></script>
 </head>
@@ -735,6 +738,7 @@ function openNow(d=new Date()){const mi=d.getHours()*60+d.getMinutes();const t=H
  if(t&&mi<t.o)return {on:false,txt:`Cerrado · abre hoy ${hm(t.o)}`};
  const n=new Date(d);n.setDate(n.getDate()+1);const nt=HORARIO.find(h=>h.days.includes(n.getDay()));return {on:false,txt:`Cerrado · abre mañana ${hm(nt.o)}`}}
 const ICONS={
+ house:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>',
  fork:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 21V3c-2.5 1.5-3.5 5-3.5 8H17"/></svg>',
  spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5c.7 5.4 3.6 8.3 9 9-5.4.7-8.3 3.6-9 9-.7-5.4-3.6-8.3-9-9 5.4-.7 8.3-3.6 9-9z"/></svg>',
  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16"/></svg>',
@@ -849,9 +853,10 @@ function render(){
   const views={home:viewHome,train:viewTrain,lib:viewLib,food:viewFood,luna:viewLuna,moon:viewMoon,yo:(m,v)=>viewHome(m,v),premios:(m,v)=>{viewLuna(m,v);const e=$('#premv');if(e)setTimeout(()=>e.scrollIntoView({block:'start'}),30)},yo:viewYo};
   if(!views[tab])tab='home';
   root.innerHTML=`<div class="app">
-   <header class="top"><img class="logo" src="img/logo-full.png" alt="Moon Wellness Club"><div class="coins">${ICONS.spark}<span id="bal">${nf(bal(m))}</span></div></header>
+   <header class="top"><img class="logo" src="img/logo-full.png" alt="Moon Wellness Club"><button class="coins" id="coinsb" aria-label="Mis destellos: ver premios">${ICONS.spark}<span id="bal">${nf(bal(m))}</span></button></header>
    <main id="view"></main></div>
-   <nav class="nav"><div>${[['home','Inicio','home'],['train','Entrenar','dumb'],['food','Comidas','fork'],['luna','Luna','spark']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train')||(tab==='moon'&&k==='home')||(tab==='premios'&&k==='luna')||(tab==='yo'&&k==='home'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
+   <nav class="nav"><div>${[['home','Inicio','house'],['train','Entrenar','dumb'],['food','Comidas','fork'],['luna','Premios','gift']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train')||(tab==='moon'&&k==='home')||(tab==='premios'&&k==='luna')||(tab==='yo'&&k==='home'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
+  {const cb=root.querySelector('#coinsb');if(cb)cb.onclick=()=>{tab='luna';render();window.scrollTo(0,0)}}
   root.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{if(navigator.vibrate)navigator.vibrate(6);tab=b.dataset.t;render();window.scrollTo(0,0)});
   {const nv=root.querySelector('.nav>div'),on=nv.querySelector('button.on');if(on){const ind=document.createElement('i');ind.className='navind';nv.prepend(ind);
    if(window.__ni!=null){ind.style.transition='none';ind.style.width=window.__nw+'px';ind.style.transform=`translateX(${window.__ni}px)`;void ind.offsetWidth;ind.style.transition=''}
@@ -884,7 +889,6 @@ function viewHome(m,v){
     <button class="lrow" id="gtrain"><span class="lic">${ICONS.dumb}</span><span class="lbody"><b>Entrenar</b><small>${wkW?`${wkW} ${wkW===1?'sesión':'sesiones'} esta semana`:'Empieza una rutina'}</small></span>${chev}</button>
     <button class="lrow" id="gfood"><span class="lic ringic">${ring(Math.min(tot.k,g.k),g.k,40,4,'','',left<0?'ov':'lf')}</span><span class="lbody"><b>Calorías</b><small>${left<0?`${nf(-left)} kcal de más`:`${nf(left)} kcal restantes`} · ${nf(Math.round(tot.k))} de ${nf(g.k)}</small></span>${chev}</button>
     <button class="lrow" id="goto"><span class="lic">${icon(nxt.icon)}</span><span class="lbody"><b>${esc(nxt.name)}</b><small>${nf(b)} de ${nf(nxt.cost)} destellos</small><span class="bar thin"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></span></span>${chev}</button>
-    <button class="lrow" id="gomoon"><span class="lic">${ICONS.clock}</span><span class="lbody"><b>Moon</b><small>${openNow().txt}</small></span>${chev}</button>
    </div></section>
   <section class="sec" style="margin-top:28px"><div class="row sp"><h2 class="sh">Esta semana</h2><span class="mu" style="font-size:12px">${Math.min(wk,goal)} de ${goal}</span></div>
     <div class="week" style="margin-top:12px">${wkDays.map(x=>`<span class="${x.on?'on':''}" style="${x.today&&!x.on?'border-color:var(--bone);color:var(--bone)':''}">${x.on?ICONS.check:x.d}</span>`).join('')}</div></section>
@@ -896,7 +900,7 @@ function viewHome(m,v){
    <p class="mu" style="text-align:center;font-size:12px;margin:16px 0 4px"><a href="#/admin" style="color:var(--mu)">Entrada del club</a></p></section>`;
   $('#out').onclick=()=>{S.me=null;save();render()};
   const go=k=>()=>{tab=k;render();window.scrollTo(0,0)};
-  $('#goto').onclick=go('premios');$('#gtrain').onclick=go('train');$('#gfood').onclick=go('food');$('#gomoon').onclick=go('moon');
+  $('#goto').onclick=go('premios');$('#gtrain').onclick=go('train');$('#gfood').onclick=go('food');
   $('#ci').onclick=()=>openCheckin(m);
 }
 function mission(t,r,done,ic,sub){return `<div class="mission ${done?'done':''}"><div class="ic">${ICONS[ic]}</div><div><b style="font-weight:500">${t}</b><small>${done?'Completada':(sub||'Pendiente')}</small></div><div class="rw">${r}</div></div>`}
