@@ -1214,10 +1214,10 @@ function addFood(m,meal){
    <label class="field" style="margin-top:12px"><span>Buscar alimento</span><input id="fq" placeholder="Pollo, avena, tortilla…" autocomplete="off"></label>
    <div id="fres" class="fres"></div>
    <input type="file" id="fcam" accept="image/*" capture="environment" hidden>
-   <button class="btn gold" id="fscan" style="width:100%;margin-top:12px">Escanear con foto</button>
+   <button class="btn gold" id="fscan" style="width:100%;margin-top:12px">Escanear con foto · Pronto</button>
    <button class="btn ghost" id="fman" style="width:100%;margin-top:10px">Agregar a mano</button>`,(bg,close)=>{
     const res=$('#fres',bg);
-    $('#fscan',bg).onclick=()=>$('#fcam',bg).click();
+    $('#fscan',bg).onclick=()=>toast('Pronto: escáner con foto');
     $('#fcam',bg).onchange=async e=>{const file=e.target.files[0];if(!file)return;
       res.innerHTML='<p class="mu" style="font-size:13px;padding:14px 0">Analizando tu plato…</p>';
       try{
