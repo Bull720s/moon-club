@@ -795,10 +795,13 @@ const fmtD=s=>fromStr(s.slice(0,10)).toLocaleDateString('es-MX',{day:'numeric',m
 
 /* ---------- pantallas socio ---------- */
 function render(){
+  {const mm=location.hash.match(/^#\/v\/(\d{4})$/);if(mm){try{sessionStorage.setItem('moon.pend',mm[1])}catch(e){}history.replaceState(null,'',location.pathname)}}
   if(location.hash.startsWith('#/admin')){return renderAdmin()}
   document.body.classList.remove('admin');
   if(!me())return renderWelcome();
   const m=me();
+  {let pc=null;try{pc=sessionStorage.getItem('moon.pend');sessionStorage.removeItem('moon.pend')}catch(e){}
+   if(pc){const r=checkIn(m,pc);if(r.ok){celebrate(r);return}toast(r.msg)}}
   const views={home:viewHome,train:viewTrain,lib:viewLib,food:viewFood,luna:viewLuna,moon:viewMoon,yo:(m,v)=>viewHome(m,v),premios:(m,v)=>{viewLuna(m,v);const e=$('#premv');if(e)setTimeout(()=>e.scrollIntoView({block:'start'}),30)},yo:viewYo};
   if(!views[tab])tab='home';
   root.innerHTML=`<div class="app">
@@ -856,7 +859,7 @@ function mission(t,r,done,ic,sub){return `<div class="mission ${done?'done':''}"
 
 function openCheckin(m){
   let stream=null,stop=false;
-  const bg=sheet(`<h2>Registrar visita</h2><p class="mu" style="font-size:13.5px">Escanea el QR de recepción o escribe el código de 4 dígitos.</p>
+  const bg=sheet(`<h2>Registrar visita</h2><p class="mu" style="font-size:13.5px">Apunta la cámara al QR de recepción. Si no puedes, escribe el código de 4 dígitos.</p>
    <div id="camwrap" style="margin-top:18px" hidden><video id="cam" playsinline muted></video></div>
    <div class="codebox"><input id="code" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off"></div>
    <div class="err" id="err"></div>
@@ -867,14 +870,20 @@ function openCheckin(m){
       stop=true;if(stream)stream.getTracks().forEach(t=>t.stop());close();celebrate(r)};
     $('#ok',bg).onclick=()=>done($('#code',bg).value.trim());
     $('#code',bg).addEventListener('keydown',e=>{if(e.key==='Enter')done(e.target.value.trim())});
+    const codeOf=t=>{const x=String(t||'').match(/(?:MOON:|#\/v\/)(\d{4})$/);return x?x[1]:null};
+    const loadJsQR=()=>window.jsQR?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='vendor/jsQR.js';sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
     $('#scan',bg).onclick=async()=>{
-      if(!('BarcodeDetector' in window)){$('#err',bg).textContent='Tu navegador no escanea QR. Escribe el código de 4 dígitos.';return}
-      try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const vid=$('#cam',bg);vid.srcObject=stream;await vid.play();$('#camwrap',bg).hidden=false;
-        const det=new BarcodeDetector({formats:['qr_code']});
-        const loop=async()=>{if(stop)return;try{const r=await det.detect(vid);const x=r.find(q=>/^MOON:\d{4}$/.test(q.rawValue));if(x){done(x.rawValue.slice(5));return}}catch(e){}requestAnimationFrame(loop)};loop();
+      try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const vid=$('#cam',bg);vid.srcObject=stream;await vid.play();$('#camwrap',bg).hidden=false;$('#scan',bg).hidden=true;
+        if('BarcodeDetector' in window){
+          const det=new BarcodeDetector({formats:['qr_code']});
+          const loop=async()=>{if(stop)return;try{const r=await det.detect(vid);const x=r.map(q=>codeOf(q.rawValue)).find(Boolean);if(x){done(x);return}}catch(e){}requestAnimationFrame(loop)};loop();
+        }else{
+          await loadJsQR();const cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
+          const loop=()=>{if(stop)return;if(vid.videoWidth){cv.width=vid.videoWidth;cv.height=vid.videoHeight;cx.drawImage(vid,0,0);const im=cx.getImageData(0,0,cv.width,cv.height);const r=window.jsQR(im.data,im.width,im.height);const x=r&&codeOf(r.data);if(x){done(x);return}}setTimeout(loop,120)};loop();
+        }
       }catch(e){$('#err',bg).textContent='No pude abrir la cámara. Escribe el código.'}};
+    setTimeout(()=>$('#scan',bg).click(),150);
     bg.addEventListener('closed',()=>{stop=true;if(stream)stream.getTracks().forEach(t=>t.stop())});
-    setTimeout(()=>$('#code',bg).focus(),300);
   });
 }
 function celebrate(r){
@@ -1321,7 +1330,7 @@ function aHoy(v){
   <div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
    <div class="card" style="text-align:center"><div class="eyebrow">Código de hoy</div><div class="big-code gold">${code}</div><p class="mu" style="font-size:12px">Cambia solo cada día a las 12 de la noche. Muéstralo en recepción como QR.</p><div class="qrwrap" id="qr"></div><button class="btn ghost sm" onclick="window.print()">Imprimir QR</button></div>
    <div class="card"><div class="eyebrow" style="margin-bottom:8px">Entraron hoy</div>${hoy.length?`<ul class="ledger">${hoy.map(m=>`<li><span>${esc(m.name)}</span><span class="mu">${streakWeeks(m)} sem. de racha</span></li>`).join('')}</ul>`:'<p class="mu" style="padding:14px 0">Aún nadie ha registrado su visita hoy.</p>'}</div></div>`;
-  drawQR($('#qr'),'MOON:'+code);
+  drawQR($('#qr'),location.origin+'/#/v/'+code);
 }
 function drawQR(el,text){
   const go=()=>{try{const q=qrcode(0,'M');q.addData(text);q.make();el.innerHTML=q.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(e){el.innerHTML='<div style="color:#000;font-size:12px;padding:20px">QR no disponible sin internet. Usa el código.</div>'}};
