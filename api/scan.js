@@ -1,5 +1,5 @@
 // Estima calorías y macros de una foto de comida con Gemini. Requiere GEMINI_API_KEY en el proyecto moon-club de Vercel.
-const ORIGENES = /^https:\/\/moon-club(-[a-z0-9-]+)?\.vercel\.app$|^http:\/\/localhost(:\d+)?$/;
+const ORIGENES = process.env.NODE_ENV === 'production' ? /^https:\/\/moon-club\.vercel\.app$/ : /^https:\/\/moon-club(-[a-z0-9-]+)?\.vercel\.app$|^http:\/\/localhost(:\d+)?$/;
 const INSTRUCCIONES = `Eres nutriólogo en México. Mira la foto del plato y estima TODO lo que se ve.
 Responde SOLO JSON: {"nombre":"nombre corto","porcion":"qué se ve, ej. 3 tacos con cebolla","kcal":n,"p":n,"c":n,"f":n,"confianza":"alta"|"media"|"baja"}
 p, c y f son gramos de proteína, carbohidratos y grasa del plato completo, con valores típicos de México.
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
   try {
     let r;
     for (const model of ['gemini-flash-latest', 'gemini-flash-lite-latest']) {
-      for (const tc of [{ thinkingLevel: 'minimal' }, { thinkingBudget: 0 }, null]) {
+      for (const tc of [{ thinkingLevel: 'minimal' }, { thinkingBudget: 0 }]) {
         r = await pedir(model, tc).catch(() => ({ status: 504 }));
         if (r.status !== 400) break;
       }
