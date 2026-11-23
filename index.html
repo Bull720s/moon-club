@@ -1213,8 +1213,26 @@ function addFood(m,meal){
   sheet(`<h2>${MEALS.find(x=>x[0]===meal)[1]}</h2>
    <label class="field" style="margin-top:12px"><span>Buscar alimento</span><input id="fq" placeholder="Pollo, avena, tortilla…" autocomplete="off"></label>
    <div id="fres" class="fres"></div>
-   <button class="btn ghost" id="fman" style="width:100%;margin-top:12px">Agregar a mano</button>`,(bg,close)=>{
+   <input type="file" id="fcam" accept="image/*" capture="environment" hidden>
+   <button class="btn gold" id="fscan" style="width:100%;margin-top:12px">Escanear con foto</button>
+   <button class="btn ghost" id="fman" style="width:100%;margin-top:10px">Agregar a mano</button>`,(bg,close)=>{
     const res=$('#fres',bg);
+    $('#fscan',bg).onclick=()=>$('#fcam',bg).click();
+    $('#fcam',bg).onchange=async e=>{const file=e.target.files[0];if(!file)return;
+      res.innerHTML='<p class="mu" style="font-size:13px;padding:14px 0">Analizando tu plato…</p>';
+      try{
+        const bmp=await createImageBitmap(file);const sc=Math.min(1,1024/Math.max(bmp.width,bmp.height));
+        const cv=document.createElement('canvas');cv.width=Math.round(bmp.width*sc);cv.height=Math.round(bmp.height*sc);
+        cv.getContext('2d').drawImage(bmp,0,0,cv.width,cv.height);
+        const r=await fetch('/api/scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({image:cv.toDataURL('image/jpeg',.8)})});
+        const j=await r.json();
+        if(!r.ok||j.error){res.innerHTML=`<p class="mu" style="font-size:13px;padding:14px 0">${j.error==='no_comida'?'No veo comida en la foto.':j.error==='sin_llave'?'El escáner aún no está activado.':'No pude analizar la foto. Intenta de nuevo.'}</p>`;return}
+        res.innerHTML=`<div class="eyebrow" style="margin:8px 0">${esc(j.nombre||'Plato')}</div>
+         <p class="mu" style="font-size:12.5px;margin-bottom:10px">${esc(j.porcion||'')} · Estimado (${esc(j.confianza||'media')}). Ajusta si hace falta.</p>
+         ${[['k','Calorías',j.kcal],['p','Proteína (g)',j.p],['c','Carbohidratos (g)',j.c],['f','Grasa (g)',j.f]].map(([k,n,v])=>`<label class="field"><span>${n}</span><input id="s_${k}" type="number" inputmode="decimal" value="${Math.round(+v||0)}"></label>`).join('')}
+         <button class="btn gold big" id="sok" style="width:100%">Agregar</button>`;
+        $('#sok',bg).onclick=()=>{put(j.nombre||'Plato',j.porcion||'1 porción',+$('#s_k',bg).value||0,+$('#s_p',bg).value||0,+$('#s_c',bg).value||0,+$('#s_f',bg).value||0);close();render();toast('Agregado')};
+      }catch(err){res.innerHTML='<p class="mu" style="font-size:13px;padding:14px 0">No pude leer la foto.</p>'}};
     const show=()=>{const q=$('#fq',bg).value.trim().toLowerCase();
       let rows=q?FOODS.filter(x=>x[0].toLowerCase().includes(q)).map(x=>['l',x]):f.recent.map(x=>['r',x]);
       rows=rows.slice(0,8).concat(q?off.map(x=>['o',x]):[]);
