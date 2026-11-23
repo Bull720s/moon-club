@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Moon Club</title>
 <meta name="description" content="Tu constancia en Moon Wellness Club: visitas, rutinas, premios, horario y membresías.">
-<meta property="og:title" content="Moon Club"><meta property="og:description" content="Entrena, junta destellos y cámbialos por premios en Moon Wellness Club."><meta property="og:image" content="https://moon-club.vercel.app/img/logo-full.png">
+<meta property="og:title" content="Moon Club"><meta property="og:description" content="Entrena, junta puntos y cámbialos por premios en Moon Wellness Club."><meta property="og:image" content="https://moon-club.vercel.app/img/logo-full.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -816,7 +816,7 @@ function checkIn(m,code){
   const extra=[];
   if(weekVisits(m).length===st.weeklyGoal){m.ledger.push({ts:t,amt:st.weeklyBonus,why:'Semana completa'});gain+=st.weeklyBonus;extra.push('Semana completa');
     const sw=streakWeeks(m);const b=st.streakBonus[sw];
-    if(b){m.ledger.push({ts:t,amt:b,why:`Racha de ${sw} semanas`});gain+=b;extra.push(`Racha de ${sw} semanas`)}}
+    if(b){m.ledger.push({ts:t,amt:b,why:`${sw} semanas seguidas`});gain+=b;extra.push(`${sw} semanas seguidas`)}}
   save();return {ok:true,gain,extra};
 }
 function redeem(m,r){
@@ -853,7 +853,7 @@ function render(){
   const views={home:viewHome,train:viewTrain,lib:viewLib,food:viewFood,luna:viewLuna,moon:viewMoon,yo:(m,v)=>viewHome(m,v),premios:(m,v)=>{viewLuna(m,v);const e=$('#premv');if(e)setTimeout(()=>e.scrollIntoView({block:'start'}),30)},yo:viewYo};
   if(!views[tab])tab='home';
   root.innerHTML=`<div class="app">
-   <header class="top"><img class="logo" src="img/logo-full.png" alt="Moon Wellness Club"><button class="coins" id="coinsb" aria-label="Mis destellos: ver premios">${ICONS.spark}<span id="bal">${nf(bal(m))}</span></button></header>
+   <header class="top"><img class="logo" src="img/logo-full.png" alt="Moon Wellness Club"><button class="coins" id="coinsb" aria-label="Mis puntos: ver premios">${ICONS.spark}<span id="bal">${nf(bal(m))}</span></button></header>
    <main id="view"></main></div>
    <nav class="nav"><div>${[['home','Inicio','house'],['train','Entrenar','dumb'],['food','Comidas','fork'],['luna','Premios','gift']].map(([k,l,i])=>`<button data-t="${k}" class="${(tab===k||(tab==='lib'&&k==='train')||(tab==='moon'&&k==='home')||(tab==='premios'&&k==='luna')||(tab==='yo'&&k==='home'))?'on':''}" ${tab===k?'aria-current="page"':''}>${ICONS[i]}<span>${l}</span></button>`).join('')}</div></nav>`;
   {const cb=root.querySelector('#coinsb');if(cb)cb.onclick=()=>{tab='luna';render();window.scrollTo(0,0)}}
@@ -882,13 +882,13 @@ function viewHome(m,v){
     <p class="mu hl" style="margin-top:6px">Socio desde ${fmtD(m.since)}</p></div></div>
   </section>
   <section class="sec" style="margin-top:14px"><button class="btn gold big ${done?'':'pulse'}" id="ci" style="width:100%" ${done?'disabled':''}>${done?'Visita de hoy registrada':'Registrar mi visita'}</button>
-   <p class="mu" style="text-align:center;font-size:12px;margin-top:10px">${done?'Vuelve mañana por más destellos.':`+${S.settings.perVisit} destellos. El código está en recepción.`}</p></section>
-  <section class="sec" style="margin-top:22px"><div class="pstats"><div><b>${m.visits.length}</b><span>Visitas</span></div><div><b>${streakWeeks(m)}</b><span>Semanas de racha</span></div><div><b>${nf(b)}</b><span>Destellos</span></div></div></section>
+   <p class="mu" style="text-align:center;font-size:12px;margin-top:10px">${done?'Vuelve mañana y gana más puntos.':`Gana ${S.settings.perVisit} puntos cada vez que vienes.`}</p></section>
+  <section class="sec" style="margin-top:22px"><div class="pstats"><div><b>${m.visits.length}</b><span>Visitas</span></div><div><b>${streakWeeks(m)}</b><span>Semanas seguidas</span></div><div><b>${nf(b)}</b><span>Puntos</span></div></div></section>
   <section class="sec" style="margin-top:6px"><h2 class="sh">Hoy</h2>
    <div class="lrows">
     <button class="lrow" id="gtrain"><span class="lic">${ICONS.dumb}</span><span class="lbody"><b>Entrenar</b><small>${wkW?`${wkW} ${wkW===1?'sesión':'sesiones'} esta semana`:'Empieza una rutina'}</small></span>${chev}</button>
     <button class="lrow" id="gfood"><span class="lic ringic">${ring(Math.min(tot.k,g.k),g.k,40,4,'','',left<0?'ov':'lf')}</span><span class="lbody"><b>Calorías</b><small>${left<0?`${nf(-left)} kcal de más`:`${nf(left)} kcal restantes`} · ${nf(Math.round(tot.k))} de ${nf(g.k)}</small></span>${chev}</button>
-    <button class="lrow" id="goto"><span class="lic">${icon(nxt.icon)}</span><span class="lbody"><b>${esc(nxt.name)}</b><small>${nf(b)} de ${nf(nxt.cost)} destellos</small><span class="bar thin"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></span></span>${chev}</button>
+    <button class="lrow" id="goto"><span class="lic">${icon(nxt.icon)}</span><span class="lbody"><b>${esc(nxt.name)}</b><small>${nf(b)} de ${nf(nxt.cost)} puntos</small><span class="bar thin"><i style="width:${Math.min(100,b/nxt.cost*100)}%"></i></span></span>${chev}</button>
    </div></section>
   <section class="sec" style="margin-top:28px"><div class="row sp"><h2 class="sh">Esta semana</h2><span class="mu" style="font-size:12px">${Math.min(wk,goal)} de ${goal}</span></div>
     <div class="week" style="margin-top:12px">${wkDays.map(x=>`<span class="${x.on?'on':''}" style="${x.today&&!x.on?'border-color:var(--bone);color:var(--bone)':''}">${x.on?ICONS.check:x.d}</span>`).join('')}</div></section>
@@ -907,7 +907,7 @@ function mission(t,r,done,ic,sub){return `<div class="mission ${done?'done':''}"
 
 function openCheckin(m){
   let stream=null,stop=false;
-  const bg=sheet(`<h2>Registrar visita</h2><p class="mu" style="font-size:13.5px">Apunta la cámara al QR de recepción. Si no puedes, escribe el código de 4 dígitos.</p>
+  const bg=sheet(`<h2>Registrar visita</h2><p class="mu" style="font-size:13.5px">Apunta tu cámara al cuadro QR de recepción. Si no sirve, escribe los 4 números.</p>
    <div id="camwrap" style="margin-top:18px" hidden><video id="cam" playsinline muted></video></div>
    <div class="codebox"><input id="code" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off"></div>
    <div class="err" id="err"></div>
@@ -1079,7 +1079,7 @@ function finishWork(m,W,el){
   sheet(`<div style="text-align:center"><div class="eyebrow gold">Entrenamiento terminado</div><h2 style="margin-top:8px">${esc(W.name)}</h2>
    <div class="grid2" style="margin:20px 0"><div class="card stat"><b>${Math.max(1,Math.round(dur/60))}</b><span>minutos</span></div><div class="card stat"><b>${nf(Math.round(vol))}</b><span>kg movidos</span></div><div class="card stat"><b>${sets.length}</b><span>series</span></div><div class="card stat"><b>${prs.length}</b><span>récords nuevos</span></div></div>
    ${prs.length?`<p class="gold" style="font-size:13.5px;margin-bottom:12px">Récord en: ${prs.map(i=>EXM[i].n).join(', ')}</p>`:''}
-   <p class="mu" style="font-size:13px;margin-bottom:18px">${gain?`+${gain} destellos por completar tu rutina. Recuerda registrar tu visita con el código de recepción.`:'Ya tenías los destellos de rutina de hoy.'}</p><button class="btn" style="width:100%" id="ok">Listo</button></div>`,(b,c)=>{$('#ok',b).onclick=c});
+   <p class="mu" style="font-size:13px;margin-bottom:18px">${gain?`+${gain} puntos por completar tu rutina. Recuerda registrar tu visita con el código de recepción.`:'Ya tenías los puntos de rutina de hoy.'}</p><button class="btn" style="width:100%" id="ok">Listo</button></div>`,(b,c)=>{$('#ok',b).onclick=c});
 }
 function viewLib(m,v){
   let g='Todos',q='',k='';
@@ -1181,13 +1181,13 @@ function viewMoon(m,v){
 function viewPremios(m,v){
   const b=bal(m);const mine=S.redemptions.filter(x=>x.mid===m.id);
   v.innerHTML=`<section class="sec"><div class="space"></div><h1 class="serif">Premios</h1>
-   <p class="mu" style="font-size:13px;margin:6px 0 14px">Canjéalos en recepción mostrando tu código.</p>
-   ${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).map(r=>`<div class="rwd"><div class="ic">${icon(r.icon)}</div><div style="flex:1;min-width:0"><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p><div class="bar" style="height:5px;margin-top:10px"><i style="width:${Math.min(100,b/r.cost*100)}%"></i></div></div><div class="go"><b>${nf(r.cost)}</b><button class="btn sm ${b>=r.cost?'gold':'ghost'}" data-r="${r.id}" ${b<r.cost?'disabled':''}>Canjear</button></div></div>`).join('')}
+   <p class="mu" style="font-size:13px;margin:6px 0 14px">Elige un premio y enséñalo en recepción.</p>
+   ${S.rewards.filter(r=>r.active).sort((a,c)=>a.cost-c.cost).map(r=>`<div class="rwd"><div class="ic">${icon(r.icon)}</div><div style="flex:1;min-width:0"><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p><div class="bar" style="height:5px;margin-top:10px"><i style="width:${Math.min(100,b/r.cost*100)}%"></i></div></div><div class="go"><b>${nf(r.cost)}</b><button class="btn sm ${b>=r.cost?'gold':'ghost'}" data-r="${r.id}" ${b<r.cost?'disabled':''}>Quiero este</button></div></div>`).join('')}
    ${mine.length?`<div class="space"></div><div class="eyebrow" style="margin-bottom:10px">Mis canjes</div>${mine.map(x=>`<div class="card row sp" style="margin-bottom:10px"><div><b style="font-weight:600">${esc(x.name)}</b><div class="mu" style="font-size:12px">${fmtD(x.ts)} · ${x.code}</div></div><span class="pill ${x.status==='pendiente'?'warn':'ok'}">${x.status}</span></div>`).join('')}`:''}
   </section>`;
   v.querySelectorAll('[data-r]').forEach(bn=>bn.onclick=()=>{
     const r=S.rewards.find(x=>x.id===bn.dataset.r);
-    sheet(`<h2>¿Canjear ${esc(r.name)}?</h2><p class="mu">Se descuentan ${nf(r.cost)} destellos. Te queda ${nf(b-r.cost)}.</p><div class="space2"></div><div class="row" style="gap:10px"><button class="btn ghost" style="flex:1" data-x>Cancelar</button><button class="btn gold" style="flex:1" data-y>Canjear</button></div>`,(bg,close)=>{
+    sheet(`<h2>¿Quieres ${esc(r.name)}?</h2><p class="mu">Gastas ${nf(r.cost)} puntos. Te quedan ${nf(b-r.cost)}.</p><div class="space2"></div><div class="row" style="gap:10px"><button class="btn ghost" style="flex:1" data-x>Cancelar</button><button class="btn gold" style="flex:1" data-y>Quiero este</button></div>`,(bg,close)=>{
       $('[data-x]',bg).onclick=close;
       $('[data-y]',bg).onclick=()=>{const red=redeem(m,r);close();if(!red)return;
         sheet(`<div style="text-align:center"><div class="eyebrow">Muestra este código en recepción</div><div class="big-code gold">${red.code}</div><h2 style="margin-top:8px">${esc(red.name)}</h2><p class="mu" style="font-size:13px">Estado: pendiente de entrega</p><div class="space2"></div><button class="btn" style="width:100%" data-z>Listo</button></div>`,(b2,c2)=>{$('[data-z]',b2).onclick=c2;b2.addEventListener('closed',render)})}});
@@ -1317,7 +1317,7 @@ function viewYo(m,v){
   const plan=PLANS.find(p=>p.id===m.plan)||PLANS[0];
   v.innerHTML=`<section class="sec"><div class="space"></div>
    <div class="prof"><div class="av">${esc(m.name.trim().charAt(0).toUpperCase())}</div><div><h1 class="serif">${esc(m.name.split(' ')[0])}</h1><p class="mu" style="font-size:12.5px;margin-top:6px">Socio desde ${fmtD(m.since)}</p></div></div>
-   <div class="pstats"><div><b>${m.visits.length}</b><span>Visitas</span></div><div><b>${streakWeeks(m)}</b><span>Semanas de racha</span></div><div><b>${nf(bal(m))}</b><span>Destellos</span></div></div>
+   <div class="pstats"><div><b>${m.visits.length}</b><span>Visitas</span></div><div><b>${streakWeeks(m)}</b><span>Semanas seguidas</span></div><div><b>${nf(bal(m))}</b><span>Puntos</span></div></div>
    <div class="card plan"><div class="row sp"><span class="eyebrow">Membresía</span><span class="pill ok">Activa</span></div><h3 style="margin-top:14px;font-weight:800;font-size:24px;line-height:1">${plan.n}</h3><p class="mu" style="margin-top:6px">${plan.p}</p></div>
    <div class="space"></div>
    <div class="card"><div class="row sp"><span class="eyebrow">Teléfono</span><span>${esc(m.phone)}</span></div></div>
@@ -1334,7 +1334,7 @@ function renderWelcome(){
    <img class="logo big" src="img/logo-full.png" alt="Moon Wellness Club">
    <div style="margin:6px 0 0">${luna(0)}</div>
    <div class="big">Cada visita<br>suma a tu ciclo.</div>
-   <p class="mu" style="font-size:14px;max-width:300px;margin:0 auto 26px">Entrena, junta destellos y cámbialos por premios en Moon Wellness Club.</p>
+   <p class="mu" style="font-size:14px;max-width:300px;margin:0 auto 26px">Entrena, junta puntos y cámbialos por premios en Moon Wellness Club.</p>
    <button class="btn gold" id="new">Crear mi cuenta</button><div class="space"></div>
    <button class="btn ghost" id="demo">Probar la app</button>
    <p class="mu" style="font-size:12px;margin-top:22px"><a href="#/admin" style="color:var(--mu)">Entrada del club</a></p>
@@ -1374,7 +1374,7 @@ function aHoy(v){
   const act=S.members.filter(m=>m.visits.some(x=>(new Date()-fromStr(x))/864e5<=14)).length;
   const emit=S.members.reduce((a,m)=>a+m.ledger.filter(l=>l.amt>0).reduce((s,l)=>s+l.amt,0),0);
   const code=dailyCode();
-  v.innerHTML=`<div class="kpis"><div class="card stat"><b>${hoy.length}</b><span>visitas hoy</span></div><div class="card stat"><b>${sem}</b><span>visitas esta semana</span></div><div class="card stat"><b>${act}/${S.members.length}</b><span>activos (14 días)</span></div><div class="card stat"><b>${nf(emit)}</b><span>destellos emitidos</span></div></div>
+  v.innerHTML=`<div class="kpis"><div class="card stat"><b>${hoy.length}</b><span>visitas hoy</span></div><div class="card stat"><b>${sem}</b><span>visitas esta semana</span></div><div class="card stat"><b>${act}/${S.members.length}</b><span>activos (14 días)</span></div><div class="card stat"><b>${nf(emit)}</b><span>puntos emitidos</span></div></div>
   <div class="space"></div>
   <div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
    <div class="card" style="text-align:center"><div class="eyebrow">Código de hoy</div><div class="big-code gold">${code}</div><p class="mu" style="font-size:12px">Cambia solo cada día a las 12 de la noche. Muéstralo en recepción como QR.</p><div class="qrwrap" id="qr"></div><button class="btn ghost sm" onclick="window.print()">Imprimir QR</button></div>
@@ -1390,7 +1390,7 @@ function aSocios(v){
   if(!S.members.length){v.innerHTML='<h2 class="serif" style="font-size:30px;margin-bottom:14px">Socios</h2><p class="mu">Todavía no hay socios registrados. Aparecerán aquí cuando creen su cuenta en la app.</p>';return}
   const rows=S.members.map(m=>({m,last:m.visits[m.visits.length-1]||'—',sw:streakWeeks(m),b:bal(m)})).sort((a,b)=>String(b.last).localeCompare(String(a.last)));
   v.innerHTML=`<div class="row sp" style="margin-bottom:14px"><h2 class="serif" style="font-size:30px">${S.members.length} socios</h2></div>
-  <div class="card scroll"><table><thead><tr><th>Socio</th><th>Plan</th><th>Visitas</th><th>Racha</th><th>Destellos</th><th>Última</th></tr></thead><tbody>
+  <div class="card scroll"><table><thead><tr><th>Socio</th><th>Plan</th><th>Visitas</th><th>Racha</th><th>Puntos</th><th>Última</th></tr></thead><tbody>
   ${rows.map(({m,last,sw,b})=>{const gone=last!=='—'&&(new Date()-fromStr(last))/864e5>14;return `<tr><td><b style="font-weight:500">${esc(m.name)}</b><div class="mu" style="font-size:11.5px">${esc(m.phone)}</div></td><td>${(PLANS.find(p=>p.id===m.plan)||PLANS[0]).n}</td><td>${m.visits.length}</td><td>${sw} sem.</td><td class="gold">${nf(b)}</td><td>${last==='—'?last:fmtD(last)} ${gone?'<span class="pill warn">Sin venir</span>':''}</td></tr>`}).join('')}
   </tbody></table></div><p class="mu" style="font-size:12px;margin-top:10px">Los socios que llevan más de 14 días sin venir salen marcados para que recepción les escriba.</p>`;
 }
@@ -1401,16 +1401,16 @@ function aCanjes(v){
 }
 function aPremios(v){
   v.innerHTML=`<div class="row sp" style="margin-bottom:14px"><h2 class="serif" style="font-size:30px">Premios</h2><button class="btn sm gold" id="add">Agregar</button></div>
-  <div class="card scroll"><table><thead><tr><th>Premio</th><th>Destellos</th><th>Activo</th></tr></thead><tbody>${S.rewards.map(r=>`<tr><td><b style="font-weight:500">${esc(r.name)}</b><div class="mu" style="font-size:11.5px">${esc(r.desc)}</div></td><td><input type="number" min="10" step="10" value="${r.cost}" data-c="${r.id}"></td><td><button class="pill ${r.active?'ok':''}" data-t="${r.id}">${r.active?'Activo':'Oculto'}</button></td></tr>`).join('')}</tbody></table></div>
-  <p class="mu" style="font-size:12px;margin-top:10px">Referencia: un socio de 3 visitas por semana junta unos 50 destellos a la semana (10 por visita más 20 de bono).</p>`;
+  <div class="card scroll"><table><thead><tr><th>Premio</th><th>Puntos</th><th>Activo</th></tr></thead><tbody>${S.rewards.map(r=>`<tr><td><b style="font-weight:500">${esc(r.name)}</b><div class="mu" style="font-size:11.5px">${esc(r.desc)}</div></td><td><input type="number" min="10" step="10" value="${r.cost}" data-c="${r.id}"></td><td><button class="pill ${r.active?'ok':''}" data-t="${r.id}">${r.active?'Activo':'Oculto'}</button></td></tr>`).join('')}</tbody></table></div>
+  <p class="mu" style="font-size:12px;margin-top:10px">Referencia: un socio de 3 visitas por semana junta unos 50 puntos a la semana (10 por visita más 20 de bono).</p>`;
   v.querySelectorAll('[data-c]').forEach(i=>i.onchange=()=>{S.rewards.find(r=>r.id===i.dataset.c).cost=Math.max(10,+i.value||10);save();toast('Guardado')});
   v.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const r=S.rewards.find(r=>r.id===b.dataset.t);r.active=!r.active;save();renderAdmin()});
-  $('#add').onclick=()=>sheet(`<h2>Nuevo premio</h2><div class="space"></div><label class="field"><span>Nombre</span><input id="rn"></label><label class="field"><span>Descripción</span><input id="rd"></label><label class="field"><span>Destellos</span><input id="rc" type="number" value="300"></label><button class="btn gold" style="width:100%" id="rs">Guardar</button>`,(bg,close)=>{$('#rs',bg).onclick=()=>{const n=$('#rn',bg).value.trim();if(!n)return;S.rewards.push({id:'r'+Date.now(),name:n,desc:$('#rd',bg).value.trim(),cost:Math.max(10,+$('#rc',bg).value||300),icon:'gift',active:true});save();close();renderAdmin()}});
+  $('#add').onclick=()=>sheet(`<h2>Nuevo premio</h2><div class="space"></div><label class="field"><span>Nombre</span><input id="rn"></label><label class="field"><span>Descripción</span><input id="rd"></label><label class="field"><span>Puntos</span><input id="rc" type="number" value="300"></label><button class="btn gold" style="width:100%" id="rs">Guardar</button>`,(bg,close)=>{$('#rs',bg).onclick=()=>{const n=$('#rn',bg).value.trim();if(!n)return;S.rewards.push({id:'r'+Date.now(),name:n,desc:$('#rd',bg).value.trim(),cost:Math.max(10,+$('#rc',bg).value||300),icon:'gift',active:true});save();close();renderAdmin()}});
 }
 function aAjustes(v){
   const s=S.settings;
   v.innerHTML=`<h2 class="serif" style="font-size:30px;margin-bottom:14px">Ajustes</h2><div class="card">
-   <label class="field"><span>Destellos por visita</span><input id="a1" type="number" value="${s.perVisit}"></label>
+   <label class="field"><span>Puntos por visita</span><input id="a1" type="number" value="${s.perVisit}"></label>
    <label class="field"><span>Meta de visitas por semana</span><input id="a2" type="number" min="1" max="7" value="${s.weeklyGoal}"></label>
    <label class="field"><span>Bono por semana completa</span><input id="a3" type="number" value="${s.weeklyBonus}"></label>
    <label class="field"><span>PIN del panel</span><input id="a4" maxlength="4" value="${s.pin}"></label>
