@@ -1136,7 +1136,6 @@ function viewLuna(m,v){
   const nxt=nextReward(m),b=bal(m);
   const drift=Array.from({length:9},(_,i)=>`<i style="left:${8+i*10.5}%;animation-delay:${(i*.7)%5}s;animation-duration:${5+(i%4)}s">${ICONS.spark}</i>`).join('');
   v.innerHTML=`<section class="lscene">
-    <div class="lsky">${drift}</div>
     <div class="ltop"><span class="eyebrow">Fase ${st+1} de 5</span><span class="live ${sleepy?'off':''}">${mood.t}</span></div>
     <div id="pet" role="button" tabindex="0" aria-label="Toca a Luna" class="lpet">${lunaPet(st,{sleepy})}</div>
     <div class="lplate"><h1>${esc(STAGES[st].n)}</h1><p>${sleepy?mood.s:esc(STAGES[st].say)}</p></div>
