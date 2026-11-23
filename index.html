@@ -700,6 +700,15 @@ h1.serif{font-size:26px!important;font-weight:700!important;letter-spacing:0;lin
 .hrow{scroll-padding-left:22px}
 .rcard.rc-t{width:132px}
 .rc-t .rc-img{margin-bottom:6px}
+
+/* v16: sesión clara: volver visible, progreso por ejercicio, nada encima */
+.wback{height:44px;padding:0 14px 0 6px;font-size:16px;font-weight:700;color:var(--bone);letter-spacing:0}
+.wsegs{position:sticky;top:calc(72px + env(safe-area-inset-top));z-index:4;display:flex;gap:5px;padding:8px 22px 6px;background:linear-gradient(rgba(5,5,5,.94) 70%,rgba(5,5,5,0))}
+.wsegs button{flex:1;height:7px;border-radius:4px;background:rgba(237,230,216,.2);padding:0}
+.wsegs button.done{background:#e8a33d}
+.work{padding-bottom:200px}
+.work .wex{scroll-margin-top:130px}
+.top{background:linear-gradient(rgba(5,5,5,.94) 60%,rgba(5,5,5,0))}
 </style>
 <script src="exercises.js"></script>
 </head>
@@ -1026,8 +1035,9 @@ function showWork(m){
   const el=document.createElement('div');el.className='work';document.body.appendChild(el);document.body.style.overflow='hidden';
   const draw=()=>{
    const done=W.items.reduce((a,i)=>a+i.sets.filter(s=>s.done).length,0),tot=W.items.reduce((a,i)=>a+i.sets.length,0);
-   el.innerHTML=`<div class="bar2"><button class="pill" id="wc">Minimizar</button><div style="text-align:center"><div class="clock" id="clk">${fmtDur(Math.floor((Date.now()-W.start)/1000))}</div><div class="mu" style="font-size:11px;letter-spacing:.14em">${done} DE ${tot} SERIES</div></div><button class="btn sm gold" id="wf">Terminar</button></div>
-   <div class="sec" style="padding-top:18px"><h1 class="serif" style="font-size:30px">${esc(W.name)}</h1></div>
+   el.innerHTML=`<div class="bar2"><button class="wback" id="wc" aria-label="Volver, el entrenamiento sigue activo">‹ Volver</button><div style="text-align:center"><div class="clock" id="clk">${fmtDur(Math.floor((Date.now()-W.start)/1000))}</div><div class="mu" style="font-size:11px;letter-spacing:.14em">${done} DE ${tot} SERIES</div></div><button class="btn sm gold" id="wf">Terminar</button></div>
+   <div class="wsegs">${W.items.map((it,ii)=>`<button data-sg="${ii}" class="${it.sets.length&&it.sets.every(x=>x.done)?'done':''}" aria-label="${esc(EXM[it.ex].n)}"></button>`).join('')}</div>
+   <div class="sec" style="padding-top:12px"><h1 class="serif" style="font-size:30px">${esc(W.name)}</h1></div>
    ${W.items.map((it,ii)=>{const e=EXM[it.ex];const b=bestKg(m,it.ex);return `<div class="wex"><div class="hd"><span class="th">${thumb(it.ex)}</span><div style="flex:1"><h3 style="font-size:15px;font-weight:600">${e.n}</h3><p class="mu" style="font-size:12px">${e.e}${b?` · Récord ${b} kg`:''}</p></div><button class="pill" data-info="${it.ex}">Ver</button></div>
      <div class="srow h"><span>Serie</span><span style="text-align:center">Anterior</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span></span></div>
      ${it.sets.map((s,si)=>`<div class="srow ${s.done?'done':''}"><span class="sn">${si+1}</span><span class="prv">${prevOf(m,it.ex,si)}</span><input inputmode="decimal" placeholder="0" value="${s.kg}" data-k="${ii}.${si}"><input inputmode="numeric" placeholder="0" value="${s.reps}" data-r="${ii}.${si}"><button class="ok" data-d="${ii}.${si}">${ICONS.check}</button></div>`).join('')}
@@ -1040,6 +1050,7 @@ function showWork(m){
    el.querySelectorAll('[data-as]').forEach(b=>b.onclick=()=>{const it=W.items[+b.dataset.as];const l=it.sets[it.sets.length-1]||{};it.sets.push({kg:l.kg||'',reps:l.reps||'',done:false});save();draw()});
    el.querySelectorAll('[data-rx]').forEach(b=>b.onclick=()=>{W.items.splice(+b.dataset.rx,1);save();draw()});
    el.querySelectorAll('[data-info]').forEach(b=>b.onclick=()=>exDetail(m,b.dataset.info,true));
+   el.querySelectorAll('[data-sg]').forEach(b=>b.onclick=()=>{const t=el.querySelectorAll('.wex')[+b.dataset.sg];if(t)t.scrollIntoView({behavior:'smooth',block:'start'})});
    $('#wa',el).onclick=()=>pickExercises(id=>{const l=lastSet(m,id);W.items.push({ex:id,sets:[0,1,2].map(()=>({kg:l?l.kg:'',reps:l?l.reps:'',done:false}))});save()},()=>draw());
    $('#wc',el).onclick=()=>{closeWork();render()};
    $('#wf',el).onclick=()=>finishWork(m,W,el);
